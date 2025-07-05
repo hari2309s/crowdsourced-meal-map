@@ -1,4 +1,4 @@
-import { supabase } from "@/database/client";
+import { supabase } from "./client";
 import type {
   FoodCenter,
   AvailabilityUpdate,
@@ -79,7 +79,7 @@ export async function createFoodCenter(
     .insert([
       {
         ...foodCenter,
-        location: `POINT(${foodCenter.location.lng} ${foodCenter.location.lat})`,
+        location: `POINT(${foodCenter["location"].lng} ${foodCenter["location"].lat})`,
       },
     ])
     .select()
@@ -104,12 +104,25 @@ export async function updateFoodCenter(
   return data as FoodCenter;
 }
 
+export type CreateAvailabilityUpdateInput = Omit<
+  AvailabilityUpdate,
+  "id" | "created_at" | "notes"
+> & {
+  notes?: string | null;
+};
+
 export async function createAvailabilityUpdate(
-  update: Omit<AvailabilityUpdate, "id" | "created_at">,
-) {
+  update: CreateAvailabilityUpdateInput,
+): Promise<AvailabilityUpdate> {
+  // Ensure notes is a string (convert null to empty string)
+  const updateData: Omit<AvailabilityUpdate, "id" | "created_at"> = {
+    ...update,
+    notes: update.notes ?? "",
+  };
+
   const { data, error } = await supabase
     .from("availability_updates")
-    .insert([update])
+    .insert([updateData])
     .select()
     .single();
 

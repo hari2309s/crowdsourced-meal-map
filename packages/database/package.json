@@ -1,5 +1,5 @@
 {
-  "name": "database",
+  "name": "@crowdsourced-meal-map/database",
   "version": "0.0.0",
   "private": true,
   "description": "Database for crowdsourced meal map",
@@ -9,11 +9,17 @@
   "author": "Hariharan Selvaraj",
   "license": "MIT",
   "dependencies": {
-    "@supabase/supabase-js": "^2.50.3",
-    "@crowdsourced-meal-map/shared": "workspace:*"
+    "@crowdsourced-meal-map/shared": "workspace:*",
+    "@supabase/supabase-js": "^2.50.3"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
   },
   "devDependencies": {
     "@crowdsourced-meal-map/typescript-config": "workspace:*",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^22.15.3",
     "typescript": "^5.8.3"
   }
 }

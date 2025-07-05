@@ -1,8 +1,13 @@
 {
-  "extends": "@repo/typescript-config/react-library.json",
+  "extends": "@crowdsourced-meal-map/typescript-config/base.json",
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "rootDir": "src",
+    "jsx": "react-jsx",
+    "paths": {
+      "@crowdsourced-meal-map/ui": ["./src/index.ts"],
+      "@crowdsourced-meal-map/ui/*": ["./src/*"]
+    }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src"]
 }

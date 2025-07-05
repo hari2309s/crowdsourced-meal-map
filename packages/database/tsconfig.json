@@ -1,15 +1,15 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "@crowdsourced-meal-map/typescript-config/base.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "outDir": "dist",
+    "rootDir": "src",
     "composite": true,
-    "baseUrl": ".",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "paths": {
-      "@/database/*": ["src/*"],
-      "@/database": ["src/index"]
+      "@crowdsourced-meal-map/database": ["./src/index.ts"],
+      "@crowdsourced-meal-map/database/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "include": ["src"]
 }

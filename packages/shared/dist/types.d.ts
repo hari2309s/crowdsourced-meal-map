@@ -4,7 +4,6 @@ export type FoodCenterType =
   | "soup_kitchen"
   | "mobile_unit"
   | "pantry";
-
 export type DietaryRestriction =
   | "vegetarian"
   | "vegan"
@@ -13,15 +12,12 @@ export type DietaryRestriction =
   | "gluten_free"
   | "dairy_free"
   | "nut_free";
-
 export type AvailabilityStatus =
   | "available"
   | "limited"
   | "unavailable"
   | "unknown";
-
 export type UserRole = "user" | "moderator" | "admin";
-
 export interface Profile {
   id: string;
   email: string;
@@ -32,7 +28,6 @@ export interface Profile {
   created_at: string;
   updated_at: string;
 }
-
 export interface FoodCenter {
   id: string;
   name: string;
@@ -49,7 +44,13 @@ export interface FoodCenter {
     lat: number;
     lng: number;
   };
-  operating_hours?: Record<string, { open: string; close: string }>;
+  operating_hours?: Record<
+    string,
+    {
+      open: string;
+      close: string;
+    }
+  >;
   dietary_restrictions?: DietaryRestriction[];
   contact_person?: string;
   languages_spoken?: string[];
@@ -60,16 +61,14 @@ export interface FoodCenter {
   created_at: string;
   updated_at: string;
 }
-
 export interface AvailabilityUpdate {
   id: string;
   food_center_id: string;
   status: AvailabilityStatus;
-  notes: string | null;
+  notes?: string;
   reported_by?: string;
   created_at: string;
 }
-
 export interface UserReport {
   id: string;
   food_center_id?: string;
@@ -81,7 +80,6 @@ export interface UserReport {
   moderated_at?: string;
   created_at: string;
 }
-
 export interface Review {
   id: string;
   food_center_id: string;
@@ -92,3 +90,4 @@ export interface Review {
   created_at: string;
   updated_at: string;
 }
+//# sourceMappingURL=types.d.ts.map

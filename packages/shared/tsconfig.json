@@ -1,25 +1,15 @@
 {
-    "extends": "@crowdsourced-meal-map/typescript-config/react-library.json",
+    "extends": "@crowdsourced-meal-map/typescript-config/base.json",
     "compilerOptions": {
         "outDir": "dist",
-        "baseUrl": ".",
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "module": "esnext",
-        "target": "es6",
+        "rootDir": "src",
+        "jsx": "react-jsx",
         "paths": {
-            "@/*": ["./src/*"]
-        },
-        "typeRoots": [
-            "./node_modules/@types",
-            "./src/types"
-        ]
+            "@crowdsourced-meal-map/shared": ["./src/index.ts"],
+            "@crowdsourced-meal-map/shared/*": ["./src/*"]
+        }
     },
     "include": [
         "src"
-    ],
-    "exclude": [
-        "node_modules",
-        "dist"
     ]
 }

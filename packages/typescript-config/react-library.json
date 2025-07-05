@@ -2,6 +2,30 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "./base.json",
   "compilerOptions": {
-    "jsx": "react-jsx"
-  }
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "module": "esnext",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": ["node", "jest", "@testing-library/jest-dom"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "src",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "**/__tests__/*",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ]
 }
