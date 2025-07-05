@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { User } from "lucide-react";
-import { useSupabase } from "../app/providers";
+import { useSupabase } from "@/providers";
 import { useRouter } from "next/navigation";
 
 export function AuthButton() {

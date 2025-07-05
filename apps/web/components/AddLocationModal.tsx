@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { createFoodCenter } from "@crowdsourced-meal-map/database";
-import { useSupabase } from "../app/providers";
+import { useSupabase } from "@/providers";
 import {
   FOOD_CENTER_TYPES,
   DIETARY_RESTRICTIONS,
@@ -35,7 +35,19 @@ const locationSchema = z.object({
     "mobile_unit",
     "pantry",
   ]),
-  dietary_restrictions: z.array(z.string()).optional(),
+  dietary_restrictions: z
+    .array(
+      z.enum([
+        "vegetarian",
+        "vegan",
+        "halal",
+        "kosher",
+        "gluten_free",
+        "dairy_free",
+        "nut_free",
+      ]),
+    )
+    .optional(),
   lat: z.number().min(-90).max(90),
   lng: z.number().min(-180).max(180),
   operating_hours: z
@@ -63,7 +75,7 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
     reset,
     formState: { errors },
   } = useForm<LocationForm>({
-    resolver: zodResolver(locationSchema),
+    resolver: zodResolver(locationSchema) as any,
     defaultValues: {
       name: "",
       address: "",
@@ -89,7 +101,7 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
         created_by: userId,
         verified: false,
         current_availability: "unknown",
-      });
+      } as any);
       reset();
       onClose();
     } catch (error) {
@@ -124,7 +136,10 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form
+              onSubmit={handleSubmit(onSubmit as any)}
+              className="space-y-4"
+            >
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   {t("name")}
@@ -268,12 +283,12 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
                       </label>
                       <input
                         type="time"
-                        {...register(`operating_hours.${day}.open`)}
+                        {...(register as any)(`operating_hours.${day}.open`)}
                         className="input flex-1"
                       />
                       <input
                         type="time"
-                        {...register(`operating_hours.${day}.close`)}
+                        {...(register as any)(`operating_hours.${day}.close`)}
                         className="input flex-1"
                       />
                     </div>

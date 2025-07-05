@@ -4,6 +4,10 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./app/*"],
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/types/*": ["./types/*"],
+      "@/messages/*": ["./messages/*"],
       "@crowdsourced-meal-map/ui": ["../../packages/ui/src/index.ts"],
       "@crowdsourced-meal-map/ui/*": ["../../packages/ui/src/*"],
       "@crowdsourced-meal-map/shared": ["../../packages/shared/src/index.ts"],
@@ -17,6 +21,7 @@
     "**/*.ts",
     "**/*.tsx",
     "next.config.js",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "../../packages/database/src/**/*"
   ]
 }

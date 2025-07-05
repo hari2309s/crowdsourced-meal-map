@@ -12,7 +12,7 @@ import {
   type Review,
   type AvailabilityStatus,
 } from "@crowdsourced-meal-map/shared";
-import { useSupabase } from "../app/providers";
+import { useSupabase } from "@/providers";
 import {
   createReview,
   createAvailabilityUpdate,

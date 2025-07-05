@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MapComponent } from "../components/Map";
-import { Sidebar } from "../components/Sidebar";
-import { Header } from "../components/Header";
+import { MapComponent } from "@/components/Map";
+import { Sidebar } from "@/components/Sidebar";
+import { Header } from "@/components/Header";
 import { getFoodCenters } from "@crowdsourced-meal-map/database";
 import type { FoodCenter } from "@crowdsourced-meal-map/shared";
 
