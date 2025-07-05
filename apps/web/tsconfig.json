@@ -1,21 +1,22 @@
 {
   "extends": "@crowdsourced-meal-map/typescript-config/nextjs.json",
   "compilerOptions": {
-    "jsx": "preserve",
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./app/*"],
+      "@crowdsourced-meal-map/ui": ["../../packages/ui/src/index.ts"],
+      "@crowdsourced-meal-map/ui/*": ["../../packages/ui/src/*"],
+      "@crowdsourced-meal-map/shared": ["../../packages/shared/src/index.ts"],
+      "@crowdsourced-meal-map/shared/*": ["../../packages/shared/src/*"],
+      "@crowdsourced-meal-map/database": ["../../packages/database/src/index.ts"],
+      "@crowdsourced-meal-map/database/*": ["../../packages/database/src/*"]
+    }
   },
   "include": [
+    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "next-env.d.ts",
     "next.config.js",
     ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
   ]
 }

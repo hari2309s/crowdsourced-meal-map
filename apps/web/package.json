@@ -11,6 +11,8 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@crowdsourced-meal-map/database": "workspace:*",
+    "@crowdsourced-meal-map/shared": "workspace:*",
     "@crowdsourced-meal-map/ui": "workspace:*",
     "@hookform/resolvers": "^5.1.1",
     "@supabase/auth-helpers-nextjs": "^0.10.0",

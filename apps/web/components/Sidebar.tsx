@@ -17,13 +17,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
   cn,
-  formatDistance,
   formatOperatingHours,
   getStatusColor,
   FOOD_CENTER_TYPES,
   DIETARY_RESTRICTIONS,
-} from "@repo/shared";
-import type { FoodCenter } from "@repo/shared";
+} from "@crowdsourced-meal-map/shared";
+import type { FoodCenter } from "@crowdsourced-meal-map/shared";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface SidebarProps {

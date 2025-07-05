@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { MapComponent } from "../components/Map";
 import { Sidebar } from "../components/Sidebar";
 import { Header } from "../components/Header";
-import { getFoodCenters } from "@repo/database";
-import type { FoodCenter } from "@repo/shared";
+import { getFoodCenters } from "@crowdsourced-meal-map/database";
+import type { FoodCenter } from "@crowdsourced-meal-map/shared";
 
 export default function HomePage() {
   const [foodCenters, setFoodCenters] = useState<FoodCenter[]>([]);

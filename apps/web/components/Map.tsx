@@ -3,8 +3,11 @@
 import { useRef, useEffect, useState } from "react";
 import Map, { Marker, Popup } from "react-map-gl/maplibre";
 import { MapPin, Navigation } from "lucide-react";
-import type { FoodCenter } from "@repo/shared";
-import { DEFAULT_MAP_CENTER, getStatusColor } from "@repo/shared";
+import type { FoodCenter } from "@crowdsourced-meal-map/shared";
+import {
+  DEFAULT_MAP_CENTER,
+  getStatusColor,
+} from "@crowdsourced-meal-map/shared";
 import { FoodCenterPopup } from "./FoodCenterPopup";
 
 interface MapComponentProps {

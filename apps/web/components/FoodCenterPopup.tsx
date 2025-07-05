@@ -8,10 +8,16 @@ import {
   formatOperatingHours,
   getStatusColor,
   DIETARY_RESTRICTIONS,
-} from "@repo/shared";
-import type { FoodCenter } from "@repo/shared";
+  type FoodCenter,
+  type Review,
+  type AvailabilityStatus,
+} from "@crowdsourced-meal-map/shared";
 import { useSupabase } from "../app/providers";
-import { createAvailabilityUpdate, createReview } from "@repo/database";
+import {
+  createReview,
+  createAvailabilityUpdate,
+  type CreateAvailabilityUpdateInput,
+} from "@crowdsourced-meal-map/database";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -59,19 +65,28 @@ export function FoodCenterPopup({ center, onClose }: FoodCenterPopupProps) {
     },
   });
 
-  const onSubmitReview = async (data: ReviewForm) => {
+  const onSubmitReview = async (data: {
+    rating: number;
+    comment?: string | undefined;
+  }) => {
+    if (!data.comment) return;
+
     setIsSubmittingReview(true);
     try {
       const { data: sessionData } = await supabase.auth.getSession();
-      if (!sessionData.session)
-        throw new Error("Please sign in to submit a review");
+      if (!sessionData?.session?.user) return;
 
-      await createReview({
+      const reviewData: Omit<
+        Review,
+        "id" | "created_at" | "updated_at" | "helpful_count"
+      > = {
         food_center_id: center.id,
         user_id: sessionData.session.user.id,
         rating: data.rating,
         comment: data.comment,
-      });
+      };
+
+      await createReview(reviewData);
       reviewForm.reset();
       setShowReviewForm(false);
     } catch (error) {
@@ -81,20 +96,27 @@ export function FoodCenterPopup({ center, onClose }: FoodCenterPopupProps) {
     }
   };
 
-  const onSubmitAvailability = async (data: AvailabilityForm) => {
+  const onSubmitAvailability = async (data: {
+    status: AvailabilityStatus;
+    notes?: string | undefined;
+  }) => {
     setIsSubmittingAvailability(true);
     try {
       const { data: sessionData } = await supabase.auth.getSession();
-      await createAvailabilityUpdate({
+      if (!sessionData?.session?.user) return;
+
+      const updateData: CreateAvailabilityUpdateInput = {
         food_center_id: center.id,
         status: data.status,
-        notes: data.notes,
-        reported_by: sessionData.session?.user.id,
-      });
+        notes: data.notes ?? "",
+        reported_by: sessionData.session.user.id,
+      };
+
+      await createAvailabilityUpdate(updateData);
       availabilityForm.reset();
       setShowAvailabilityForm(false);
     } catch (error) {
-      console.error("Error submitting availability:", error);
+      console.error("Error submitting availability update:", error);
     } finally {
       setIsSubmittingAvailability(false);
     }

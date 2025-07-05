@@ -6,9 +6,12 @@ import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { createFoodCenter } from "@repo/database";
+import { createFoodCenter } from "@crowdsourced-meal-map/database";
 import { useSupabase } from "../app/providers";
-import { FOOD_CENTER_TYPES, DIETARY_RESTRICTIONS } from "@repo/shared";
+import {
+  FOOD_CENTER_TYPES,
+  DIETARY_RESTRICTIONS,
+} from "@crowdsourced-meal-map/shared";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface AddLocationModalProps {
