@@ -39,4 +39,16 @@ next-env.d.ts
 # turbo
 .turbo
 
-/packages/database/dist
+# Build outputs
+**/dist/
+**/build/
+**/.next/
+**/out/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
