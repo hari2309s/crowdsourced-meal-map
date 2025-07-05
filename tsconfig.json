@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./packages/typescript-config/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@shared/*": ["./packages/shared/src/*"],
+      "@crowdsourced-meal-map/shared/*": ["./packages/shared/src/*"],
+      "@crowdsourced-meal-map/database/*": ["./packages/database/src/*"],
+      "@crowdsourced-meal-map/ui/*": ["./packages/ui/src/*"],
+      "@crowdsourced-meal-map/typescript-config": ["./packages/typescript-config/src/index.ts"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.d.ts",
+    "**/*.mjs",
+    "**/*.cjs",
+    "./src/**/*.json"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".next",
+    ".turbo",
+    "**/__tests__/*",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*.stories.*",
+    "**/__mocks__/*",
+    "**/coverage",
+    "**/.eslintrc.*",
+    "**/vite.config.*",
+    "**/jest.config.*"
+  ]
+}

@@ -1,6 +1,9 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
+  "globalDependencies": [
+    ".env*"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -8,14 +11,30 @@
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "cache": true,
+      "inputs": [
+        "**/.eslintrc.*",
+        "**/tsconfig*.json",
+        "**/package.json",
+        "**/*.{ts,tsx,js,jsx}",
+        "!**/dist/**",
+        "!**/build/**",
+        "!**/node_modules/**"
+      ]
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": ["^check-types"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*", "**/*.ts", "**/*.tsx", "!**/node_modules/**"]
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": [
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY"
+      ]
     }
   }
 }
