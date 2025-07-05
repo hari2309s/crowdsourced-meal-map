@@ -1,0 +1,43 @@
+{
+    "Header": {
+        "title": "Meal Map",
+        "subtitle": "Find food support near you",
+        "addLocation": "Add Location",
+        "signIn": "Sign In",
+        "signOut": "Sign Out"
+    },
+    "Sidebar": {
+        "searchPlaceholder": "Search food centers...",
+        "filters": "Filters",
+        "type": "Type",
+        "allTypes": "All Types",
+        "dietaryRestrictions": "Dietary Restrictions",
+        "applyFilters": "Apply Filters",
+        "loading": "Loading...",
+        "noResults": "No food centers found"
+    },
+    "FoodCenterPopup": {
+        "submitReview": "Submit Review",
+        "reportAvailability": "Report Availability",
+        "rating": "Rating",
+        "comment": "Comment",
+        "availabilityStatus": "Availability Status",
+        "notes": "Notes",
+        "submit": "Submit"
+    },
+    "AddLocationModal": {
+        "title": "Add New Food Center",
+        "name": "Name",
+        "address": "Address",
+        "type": "Type",
+        "dietaryRestrictions": "Dietary Restrictions",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "phone": "Phone",
+        "email": "Email",
+        "website": "Website",
+        "operatingHours": "Operating Hours",
+        "cancel": "Cancel",
+        "submit": "Submit"
+    }
+}
