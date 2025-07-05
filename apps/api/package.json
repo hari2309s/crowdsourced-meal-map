@@ -10,20 +10,21 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@crowdsourced-meal-map/database": "workspace:*",
+    "@crowdsourced-meal-map/shared": "workspace:*",
     "@supabase/supabase-js": "^2.50.3",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "zod": "^3.25.74",
-    "@crowdsourced-meal-map/shared": "workspace:*",
-    "@crowdsourced-meal-map/database": "workspace:*"
+    "zod": "^3.25.74"
   },
   "devDependencies": {
+    "@crowdsourced-meal-map/typescript-config": "workspace:*",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
     "@types/node": "^22.15.3",
     "eslint": "^9.30.0",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.8.3",
-    "@crowdsourced-meal-map/typescript-config": "workspace:*"
+    "typescript": "^5.8.3"
   }
 }

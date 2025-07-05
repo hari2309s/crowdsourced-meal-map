@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { createReview, getReviews } from "@repo/database";
+import { createReview, getReviews } from "@crowdsourced-meal-map/database";
 
 export const reviewRoutes = Router();
 

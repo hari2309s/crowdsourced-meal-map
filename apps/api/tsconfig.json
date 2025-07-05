@@ -1,10 +1,19 @@
 {
-    "extends": "../../packages/typescript-config/base.json",
-    "compilerOptions": {
-      "outDir": "dist",
-      "rootDir": "src",
-      "target": "es2020"
-    },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules"]
-  }
+  "extends": "@crowdsourced-meal-map/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "types": ["node", "jest"],
+    "lib": ["es2020"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@shared/*": ["../../packages/shared/src/*"],
+      "@crowdsourced-meal-map/shared/*": ["../../packages/shared/src/*"],
+      "@crowdsourced-meal-map/database/*": ["../../packages/database/src/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ]
+}
