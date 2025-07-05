@@ -1,0 +1,19 @@
+{
+  "name": "database",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Database for crowdsourced meal map",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "keywords": [],
+  "author": "Hariharan Selvaraj",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.50.3",
+    "@crowdsourced-meal-map/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@crowdsourced-meal-map/typescript-config": "workspace:*",
+    "typescript": "^5.8.3"
+  }
+}
