@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -13,11 +13,7 @@ const Context = createContext<SupabaseContext | undefined>(undefined);
 export function Providers({ children }: { children: React.ReactNode }) {
   const [supabase] = useState(() => createClientComponentClient());
 
-  return (
-    <Context.Provider value={{ supabase }}>
-      <div className="min-h-screen bg-gray-50">{children}</div>
-    </Context.Provider>
-  );
+  return <Context.Provider value={{ supabase }}>{children}</Context.Provider>;
 }
 
 export const useSupabase = () => {

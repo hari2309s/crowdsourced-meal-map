@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSupabase } from "../../providers";
+import { useSupabase } from "@/providers";
 
 export default function AuthCallback() {
   const { supabase } = useSupabase();

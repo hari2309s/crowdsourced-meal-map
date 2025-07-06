@@ -8,7 +8,7 @@ import {
   DEFAULT_MAP_CENTER,
   getStatusColor,
 } from "@crowdsourced-meal-map/shared";
-import { FoodCenterPopup } from "./FoodCenterPopup";
+import { FoodCenterPopup } from "@/components/FoodCenterPopup";
 
 interface MapComponentProps {
   foodCenters: FoodCenter[];

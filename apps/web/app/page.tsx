@@ -6,6 +6,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { Header } from "@/components/Header";
 import { getFoodCenters } from "@crowdsourced-meal-map/database";
 import type { FoodCenter } from "@crowdsourced-meal-map/shared";
+import { motion } from "framer-motion";
 
 export default function HomePage() {
   const [foodCenters, setFoodCenters] = useState<FoodCenter[]>([]);
@@ -36,9 +37,13 @@ export default function HomePage() {
   }, [filters]);
 
   return (
-    <div className="h-screen flex flex-col">
+    <motion.div
+      className="h-screen w-screen flex flex-col items-center justify-center bg-stone-100"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
       <Header />
-      <div className="flex-1 flex">
+      <div className="flex-1 flex items-center justify-center">
         <Sidebar
           foodCenters={foodCenters}
           selectedCenter={selectedCenter}
@@ -55,6 +60,6 @@ export default function HomePage() {
           />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
