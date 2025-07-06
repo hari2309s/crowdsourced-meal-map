@@ -1,45 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @import 'maplibre-gl/dist/maplibre-gl.css';
 
 @layer base {
   html {
     scroll-behavior: smooth;
-  }
-}
-
-@layer components {
-  .btn {
-    @apply inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
-  }
-  
-  .btn-primary {
-    @apply btn bg-primary-600 text-white hover:bg-primary-700;
-  }
-  
-  .btn-secondary {
-    @apply btn bg-white text-gray-900 border border-gray-300 hover:bg-gray-50;
-  }
-  
-  .btn-sm {
-    @apply h-8 px-3 text-xs;
-  }
-  
-  .btn-md {
-    @apply h-10 px-4 py-2;
-  }
-  
-  .btn-lg {
-    @apply h-12 px-8 text-base;
-  }
-  
-  .card {
-    @apply bg-white rounded-lg border border-gray-200 shadow-sm;
-  }
-  
-  .input {
-    @apply block w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500;
   }
 }

@@ -22,6 +22,7 @@
     "**/*.tsx",
     "next.config.js",
     ".next/types/**/*.ts",
-    "../../packages/database/src/**/*"
+    "../../packages/database/src/**/*",
+    "../../packages/shared/src/**/*"
   ]
 }
