@@ -36,6 +36,6 @@ export function getStatusColor(status: string): string {
     case "unavailable":
       return "text-red-600 bg-red-50";
     default:
-      return "text-gray-600 bg-gray-50";
+      return "text-stone-600 bg-stone-50";
   }
 }

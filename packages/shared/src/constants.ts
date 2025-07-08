@@ -33,6 +33,6 @@ export const LANGUAGES = [
 ] as const;
 
 export const DEFAULT_MAP_CENTER = {
-  lat: 52.52,
-  lng: 13.405,
-}; // Berlin center
+  lat: 52.4991,
+  lng: 13.4184,
+}; // Kottbusser Tor, Berlin
