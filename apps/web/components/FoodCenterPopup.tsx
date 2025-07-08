@@ -40,7 +40,7 @@ const availabilitySchema = z.object({
 type ReviewForm = z.infer<typeof reviewSchema>;
 type AvailabilityForm = z.infer<typeof availabilitySchema>;
 
-export function FoodCenterPopup({ center, onClose }: FoodCenterPopupProps) {
+const FoodCenterPopup = ({ center, onClose }: FoodCenterPopupProps) => {
   const t = useTranslations("FoodCenterPopup");
   const { supabase } = useSupabase();
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
@@ -277,4 +277,6 @@ export function FoodCenterPopup({ center, onClose }: FoodCenterPopupProps) {
       )}
     </div>
   );
-}
+};
+
+export default FoodCenterPopup;

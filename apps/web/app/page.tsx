@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MapComponent } from "@/components/Map";
-import { Sidebar } from "@/components/Sidebar";
-import { Header } from "@/components/Header";
+import Map from "@/components/Map";
+import Sidebar from "@/components/Sidebar";
+import Header from "@/components/Header";
 import { getFoodCenters } from "@crowdsourced-meal-map/database";
 import type { FoodCenter } from "@crowdsourced-meal-map/shared";
 import { motion } from "framer-motion";
@@ -38,12 +38,12 @@ export default function HomePage() {
 
   return (
     <motion.div
-      className="h-screen w-screen flex flex-col items-center justify-center bg-stone-100"
+      className="h-screen w-screen flex flex-col items-center justify-center bg-stone-50"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
       <Header />
-      <div className="flex-1 flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center w-[90%] py-4">
         <Sidebar
           foodCenters={foodCenters}
           selectedCenter={selectedCenter}
@@ -52,8 +52,8 @@ export default function HomePage() {
           onFiltersChange={setFilters}
           loading={loading}
         />
-        <div className="flex-1">
-          <MapComponent
+        <div className="flex-1 py-4 pl-4 pr-0">
+          <Map
             foodCenters={foodCenters}
             selectedCenter={selectedCenter}
             onSelectCenter={setSelectedCenter}

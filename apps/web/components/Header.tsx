@@ -4,14 +4,18 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Plus } from "lucide-react";
 import Image from "next/image";
-import { AuthButton } from "@/components/AuthButton";
+import AuthButton from "@/components/AuthButton";
 import AddLocationModal from "@/components/AddLocationModal";
+import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 
 const cmm = "/cmm.png";
 
-export function Header() {
+const Header = () => {
   const t = useTranslations("Header");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const router = useRouter();
+  const locale = useLocale();
 
   return (
     <>
@@ -35,7 +39,7 @@ export function Header() {
 
           <div className="flex items-center space-x-4">
             <button
-              onClick={() => setIsAddModalOpen(true)}
+              onClick={() => router.push(`/${locale}/add-location`)}
               className="h-9 flex justify-center items-center cursor-pointer bg-stone-50 border-[1px] border-dashed border-stone-700 rounded-lg p-2 hover:bg-stone-100"
             >
               <Plus className="h-4 w-4 mr-1" />
@@ -52,4 +56,6 @@ export function Header() {
       />
     </>
   );
-}
+};
+
+export default Header;

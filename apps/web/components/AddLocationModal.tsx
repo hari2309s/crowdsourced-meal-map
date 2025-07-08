@@ -48,8 +48,8 @@ const locationSchema = z.object({
       ]),
     )
     .optional(),
-  lat: z.number().min(-90).max(90),
-  lng: z.number().min(-180).max(180),
+  lat: z.number().min(-90).max(90).optional(),
+  lng: z.number().min(-180).max(180).optional(),
   operating_hours: z
     .object({
       mon: z.object({ open: z.string(), close: z.string() }).optional(),
@@ -65,7 +65,7 @@ const locationSchema = z.object({
 
 type LocationForm = z.infer<typeof locationSchema>;
 
-export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
+const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
   const t = useTranslations("AddLocationModal");
   const { supabase } = useSupabase();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -82,8 +82,6 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
       city: "Berlin",
       country: "Germany",
       type: "food_bank",
-      lat: 52.52,
-      lng: 13.405,
       dietary_restrictions: [],
       operating_hours: {},
     },
@@ -124,13 +122,13 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
-            className="bg-white rounded-lg p-6 w-full max-w-md m-4"
+            className="bg-stone-200 rounded-lg p-6 w-full max-w-md m-4"
           >
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">{t("title")}</h2>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-stone-600 hover:text-stone-800 cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -140,11 +138,18 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
               onSubmit={handleSubmit(onSubmit as any)}
               className="space-y-4"
             >
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
+              <div className="flex justify-between">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-stone-700"
+                >
                   {t("name")}
                 </label>
-                <input {...register("name")} className="input" />
+                <input
+                  id="name"
+                  {...register("name")}
+                  className="bg-stone-100 border-[1px] border-dashed border-stone-600 rounded-lg p-2 h-7 focus:border-stone-600 focus:ring-stone-600 focus:outline-none"
+                />
                 {errors.name && (
                   <p className="text-xs text-red-600 mt-1">
                     {errors.name.message}
@@ -152,11 +157,18 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
+              <div className="flex justify-between">
+                <label
+                  htmlFor="address"
+                  className="block text-sm font-medium text-stone-700"
+                >
                   {t("address")}
                 </label>
-                <input {...register("address")} className="input" />
+                <input
+                  id="address"
+                  {...register("address")}
+                  className="bg-stone-100 border-[1px] border-dashed border-stone-600 rounded-lg p-2 h-7 focus:border-stone-600 focus:ring-stone-600 focus:outline-none"
+                />
                 {errors.address && (
                   <p className="text-xs text-red-600 mt-1">
                     {errors.address.message}
@@ -164,11 +176,14 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
+              <div className="flex justify-between">
+                <label
+                  htmlFor="type"
+                  className="block text-sm font-medium text-stone-700"
+                >
                   {t("type")}
                 </label>
-                <select {...register("type")} className="input">
+                <select id="type" {...register("type")} className="input">
                   {FOOD_CENTER_TYPES.map((type) => (
                     <option key={type.value} value={type.value}>
                       {type.label}
@@ -178,22 +193,27 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="dietaryRestrictions"
+                  className="block text-sm font-medium text-stone-700 row-gap-2"
+                >
                   {t("dietaryRestrictions")}
                 </label>
-                <div className="space-y-2 max-h-48 overflow-y-auto">
+                <div className="space-y-2 max-h-48 overflow-y-auto flex flex-wrap gap-2 items-center">
                   {DIETARY_RESTRICTIONS.map((restriction) => (
                     <label
                       key={restriction.value}
+                      htmlFor="dietaryRestrictions"
                       className="flex items-center space-x-2"
                     >
                       <input
+                        id="dietaryRestrictions"
                         type="checkbox"
                         {...register("dietary_restrictions")}
                         value={restriction.value}
-                        className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-stone-600 focus:ring-stone-500 border-stone-300 rounded"
                       />
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-stone-600">
                         {restriction.label}
                       </span>
                     </label>
@@ -201,7 +221,7 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
                 </div>
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-gray-700">
                   {t("latitude")}
                 </label>
@@ -216,9 +236,9 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
                     {errors.lat.message}
                   </p>
                 )}
-              </div>
+              </div> */}
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-gray-700">
                   {t("longitude")}
                 </label>
@@ -233,13 +253,20 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
                     {errors.lng.message}
                   </p>
                 )}
-              </div>
+              </div> */}
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
+              <div className="flex justify-between">
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-stone-700"
+                >
                   {t("phone")}
                 </label>
-                <input {...register("phone")} className="input" />
+                <input
+                  id="phone"
+                  {...register("phone")}
+                  className="bg-stone-100 border-[1px] border-dashed border-stone-600 rounded-lg p-2 h-7 focus:border-stone-600 focus:ring-stone-600 focus:outline-none"
+                />
                 {errors.phone && (
                   <p className="text-xs text-red-600 mt-1">
                     {errors.phone.message}
@@ -247,11 +274,18 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
+              <div className="flex justify-between">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-stone-700"
+                >
                   {t("email")}
                 </label>
-                <input {...register("email")} className="input" />
+                <input
+                  id="email"
+                  {...register("email")}
+                  className="bg-stone-100 border-[1px] border-dashed border-stone-600 rounded-lg p-2 h-7 focus:border-stone-600 focus:ring-stone-600 focus:outline-none"
+                />
                 {errors.email && (
                   <p className="text-xs text-red-600 mt-1">
                     {errors.email.message}
@@ -259,11 +293,18 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
+              <div className="flex justify-between">
+                <label
+                  htmlFor="website"
+                  className="block text-sm font-medium text-stone-700"
+                >
                   {t("website")}
                 </label>
-                <input {...register("website")} className="input" />
+                <input
+                  id="website"
+                  {...register("website")}
+                  className="bg-stone-100 border-[1px] border-dashed border-stone-600 rounded-lg p-2 h-7 focus:border-stone-600 focus:ring-stone-600 focus:outline-none"
+                />
                 {errors.website && (
                   <p className="text-xs text-red-600 mt-1">
                     {errors.website.message}
@@ -272,24 +313,32 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="operatingHours"
+                  className="block text-sm font-medium text-stone-700"
+                >
                   {t("operatingHours")}
                 </label>
                 {["mon", "tue", "wed", "thu", "fri", "sat", "sun"].map(
                   (day) => (
                     <div key={day} className="flex space-x-2">
-                      <label className="text-sm text-gray-600 capitalize w-16">
+                      <label
+                        htmlFor="operatingHours"
+                        className="text-sm text-stone-600 capitalize w-16"
+                      >
                         {day}
                       </label>
                       <input
+                        id="operatingHours"
                         type="time"
                         {...(register as any)(`operating_hours.${day}.open`)}
-                        className="input flex-1"
+                        className="bg-stone-100 border-[1px] border-stone-600 rounded-lg p-2 h-7 focus:border-stone-600 focus:ring-stone-600 focus:outline-none flex-1"
                       />
                       <input
+                        id="operatingHours"
                         type="time"
                         {...(register as any)(`operating_hours.${day}.close`)}
-                        className="input flex-1"
+                        className="bg-stone-100 border-[1px] border-stone-600 rounded-lg p-2 h-7 focus:border-stone-600 focus:ring-stone-600 focus:outline-none flex-1"
                       />
                     </div>
                   ),
@@ -300,14 +349,14 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="btn btn-secondary btn-sm flex-1"
+                  className="bg-stone-50 border-[1px] border-dashed border-stone-600 rounded-lg p-2 h-7 focus:border-stone-600 focus:ring-stone-600 focus:outline-none btn-sm flex-1"
                 >
                   {t("cancel")}
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="btn btn-primary btn-sm flex-1"
+                  className="bg-stone-50 border-[1px] border-dashed border-stone-600 rounded-lg p-2 h-7 focus:border-stone-600 focus:ring-stone-600 focus:outline-none btn-sm flex-1"
                 >
                   {isSubmitting ? "Submitting..." : t("submit")}
                 </button>
@@ -318,4 +367,6 @@ export function AddLocationModal({ isOpen, onClose }: AddLocationModalProps) {
       )}
     </AnimatePresence>
   );
-}
+};
+
+export default AddLocationModal;

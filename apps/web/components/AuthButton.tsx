@@ -6,7 +6,7 @@ import { User } from "lucide-react";
 import { useSupabase } from "@/providers";
 import { useRouter } from "next/navigation";
 
-export function AuthButton() {
+const AuthButton = () => {
   const t = useTranslations("Header");
   const { supabase } = useSupabase();
   const router = useRouter();
@@ -72,4 +72,6 @@ export function AuthButton() {
       )}
     </div>
   );
-}
+};
+
+export default AuthButton;
