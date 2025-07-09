@@ -63,7 +63,7 @@ const AuthButton = () => {
       ) : (
         <button
           onClick={handleSignIn}
-          className="h-9 flex justify-center items-center cursor-pointer bg-stone-700 text-white border-[1px] border-dashed border-stone-700 rounded-lg p-2 hover:bg-stone-900"
+          className="h-9 flex justify-center items-center cursor-pointer bg-stone-700 text-white border-[1px] border-dashed border-stone-700 rounded-lg p-2 hover:bg-stone-900 disabled:cursor-not-allowed"
           disabled
         >
           <User className="h-4 w-4 mr-1" />
