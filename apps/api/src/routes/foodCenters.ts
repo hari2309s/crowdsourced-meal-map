@@ -1,14 +1,18 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import { z } from "zod";
 import {
   createFoodCenter,
   getFoodCenters,
   getFoodCenterById,
   updateFoodCenter,
-} from "@repo/database";
-import type { FoodCenter } from "@repo/shared";
+} from "@crowdsourced-meal-map/database";
+import {
+  DietaryRestriction,
+  removeUndefined,
+  FoodCenter,
+} from "@crowdsourced-meal-map/shared";
 
-export const foodCenterRoutes = Router();
+export const foodCenterRoutes: Router = Router();
 
 const foodCenterSchema = z.object({
   name: z.string().min(1),
@@ -47,19 +51,22 @@ const foodCenterSchema = z.object({
 
 foodCenterRoutes.get("/", async (req, res) => {
   try {
-    const filters = {
-      type: req.query.type as string,
-      dietary_restrictions: req.query.dietary_restrictions
-        ? (req.query.dietary_restrictions as string).split(",")
-        : undefined,
-      city: req.query.city as string,
-      verified:
-        req.query.verified === "true"
-          ? true
-          : req.query.verified === "false"
-            ? false
-            : undefined,
+    const filters: any = {
+      type: req.query["type"] as string,
+      dietary_restrictions: req.query["dietary_restrictions"]
+        ? (req.query["dietary_restrictions"] as string).split(",")
+        : [],
+      city: req.query["city"] as string,
     };
+    const verified =
+      req.query["verified"] === "true"
+        ? true
+        : req.query["verified"] === "false"
+          ? false
+          : undefined;
+    if (verified !== undefined) {
+      filters.verified = verified;
+    }
     const foodCenters = await getFoodCenters(filters);
     res.json(foodCenters);
   } catch (error) {
@@ -67,11 +74,17 @@ foodCenterRoutes.get("/", async (req, res) => {
   }
 });
 
-foodCenterRoutes.get("/:id", async (req, res) => {
+foodCenterRoutes.get("/:id", async (req: Request, res: Response) => {
+  const id = req.params["id"];
+  if (!id) {
+    res.status(400).json({ error: "Missing food center id" });
+    return;
+  }
   try {
-    const foodCenter = await getFoodCenterById(req.params.id);
+    const foodCenter = await getFoodCenterById(id);
     if (!foodCenter) {
-      return res.status(404).json({ error: "Food center not found" });
+      res.status(404).json({ error: "Food center not found" });
+      return;
     }
     res.json(foodCenter);
   } catch (error) {
@@ -79,27 +92,71 @@ foodCenterRoutes.get("/:id", async (req, res) => {
   }
 });
 
-foodCenterRoutes.post("/", async (req, res) => {
+foodCenterRoutes.post("/", async (req: Request, res: Response) => {
   try {
     const data = foodCenterSchema.parse(req.body);
-    const foodCenter = await createFoodCenter(data);
+    const foodCenter = await createFoodCenter({
+      ...data,
+      description: data.description ?? "",
+      postal_code: data.postal_code ?? "",
+      phone: data.phone ?? "",
+      email: data.email ?? "",
+      website: data.website ?? "",
+      contact_person: data.contact_person ?? "",
+      operating_hours: data.operating_hours ?? {},
+      dietary_restrictions: (data.dietary_restrictions ??
+        []) as DietaryRestriction[],
+      languages_spoken: data.languages_spoken ?? [],
+      capacity: data.capacity ?? 0,
+      created_by: data.created_by ?? "",
+    });
     res.status(201).json(foodCenter);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: error.errors });
+      res.status(400).json({ error: error.errors });
+      return;
     }
     res.status(500).json({ error: "Failed to create food center" });
   }
 });
 
-foodCenterRoutes.put("/:id", async (req, res) => {
+foodCenterRoutes.put("/:id", async (req: Request, res: Response) => {
+  const id = req.params["id"];
+  if (!id) {
+    res.status(400).json({ error: "Missing food center id" });
+    return;
+  }
   try {
     const data = foodCenterSchema.partial().parse(req.body);
-    const foodCenter = await updateFoodCenter(req.params.id, data);
+    const cleanedData = removeUndefined(data);
+    const requiredStringFields = [
+      "name",
+      "description",
+      "type",
+      "address",
+      "city",
+      "country",
+      "postal_code",
+      "phone",
+      "email",
+      "website",
+      "contact_person",
+      "created_by",
+    ];
+    for (const field of requiredStringFields) {
+      if ((cleanedData as Record<string, unknown>)[field] === undefined) {
+        delete (cleanedData as Record<string, unknown>)[field];
+      }
+    }
+    const foodCenter = await updateFoodCenter(
+      id,
+      cleanedData as Partial<FoodCenter>,
+    );
     res.json(foodCenter);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: error.errors });
+      res.status(400).json({ error: error.errors });
+      return;
     }
     res.status(500).json({ error: "Failed to update food center" });
   }

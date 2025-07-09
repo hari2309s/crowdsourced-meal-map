@@ -39,3 +39,9 @@ export function getStatusColor(status: string): string {
       return "text-stone-600 bg-stone-50";
   }
 }
+
+export function removeUndefined<T extends object>(obj: T): T {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, v]) => v !== undefined),
+  ) as T;
+}

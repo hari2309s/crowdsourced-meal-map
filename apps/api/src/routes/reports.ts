@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { z } from "zod";
-import { createUserReport } from "@repo/database";
+import { createUserReport } from "@crowdsourced-meal-map/database";
 
-export const reportRoutes = Router();
+export const reportRoutes: Router = Router();
 
 const reportSchema = z.object({
   food_center_id: z.string().optional(),
@@ -12,10 +12,14 @@ const reportSchema = z.object({
   status: z.enum(["pending", "approved", "rejected"]).default("pending"),
 });
 
-reportRoutes.post("/", async (req, res) => {
+reportRoutes.post("/", async (req: any, res: any) => {
   try {
     const data = reportSchema.parse(req.body);
-    const report = await createUserReport(data);
+    const report = await createUserReport({
+      ...data,
+      food_center_id: data.food_center_id ?? "",
+      reporter_id: data.reporter_id ?? "",
+    });
     res.status(201).json(report);
   } catch (error) {
     if (error instanceof z.ZodError) {
