@@ -1,11 +1,11 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import { z } from "zod";
 import {
   createAvailabilityUpdate,
   getAvailabilityUpdates,
-} from "@repo/database";
+} from "@crowdsourced-meal-map/database";
 
-export const availabilityRoutes = Router();
+export const availabilityRoutes: Router = Router();
 
 const availabilitySchema = z.object({
   food_center_id: z.string(),
@@ -23,14 +23,19 @@ availabilityRoutes.get("/:foodCenterId", async (req, res) => {
   }
 });
 
-availabilityRoutes.post("/", async (req, res) => {
+availabilityRoutes.post("/", async (req: Request, res: Response) => {
   try {
     const data = availabilitySchema.parse(req.body);
-    const update = await createAvailabilityUpdate(data);
+    const update = await createAvailabilityUpdate({
+      ...data,
+      notes: data.notes ?? "",
+      reported_by: data.reported_by ?? "",
+    });
     res.status(201).json(update);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: error.errors });
+      res.status(400).json({ error: error.errors });
+      return;
     }
     res.status(500).json({ error: "Failed to create availability update" });
   }
