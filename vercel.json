@@ -1,0 +1,14 @@
+{
+  "projects": [
+    {
+      "src": "apps/web",
+      "use": "@vercel/next"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    }
+  ]
+} 
