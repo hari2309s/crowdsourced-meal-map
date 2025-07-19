@@ -13,7 +13,7 @@ export async function getFoodCenters(filters?: {
   verified?: boolean;
 }) {
   let query = supabase
-    .from("food_centers")
+    .from("food_centers_with_latlng")
     .select("*")
     .order("created_at", { ascending: false });
 
@@ -55,14 +55,19 @@ export async function getNearbyFoodCenters(
     lng,
     radius_meters: radiusMeters,
   });
-
   if (error) throw error;
-  return data;
+  return data as {
+    id: string;
+    name: string;
+    lat: number;
+    lng: number;
+    current_availability: string;
+  }[];
 }
 
 export async function getFoodCenterById(id: string) {
   const { data, error } = await supabase
-    .from("food_centers")
+    .from("food_centers_with_latlng")
     .select("*")
     .eq("id", id)
     .single();

@@ -1,31 +1,22 @@
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import React from "react";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { Providers } from "@/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
-  title: "Crowdsourced Meal Map",
-  description: "Find food distribution centers and community kitchens near you",
-};
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
-  params: { locale },
 }: {
   children: React.ReactNode;
-  params: { locale: string };
 }) {
-  const messages = await getMessages({ locale });
-
   return (
-    <html lang={locale}>
+    <html lang="en">
+      <head>
+        <title>Crowdsourced MealMap</title>
+      </head>
       <body className={inter.className}>
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <Providers>{children}</Providers>
-        </NextIntlClientProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

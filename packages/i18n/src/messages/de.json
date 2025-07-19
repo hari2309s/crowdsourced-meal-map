@@ -1,0 +1,43 @@
+{
+    "Header": {
+        "title": "Essenskarte",
+        "subtitle": "Finden Sie Lebensmittelunterstützung in Ihrer Nähe",
+        "addLocation": "Standort hinzufügen",
+        "signIn": "Anmelden",
+        "signOut": "Abmelden"
+    },
+    "Sidebar": {
+        "searchPlaceholder": "Lebensmittelzentren suchen...",
+        "filters": "Filter",
+        "type": "Typ",
+        "allTypes": "Alle Typen",
+        "dietaryRestrictions": "Ernährungsbeschränkungen",
+        "applyFilters": "Filter anwenden",
+        "loading": "Laden...",
+        "noResults": "Keine Lebensmittelzentren gefunden"
+    },
+    "FoodCenterPopup": {
+        "submitReview": "Bewertung abgeben",
+        "reportAvailability": "Verfügbarkeit melden",
+        "rating": "Bewertung",
+        "comment": "Kommentar",
+        "availabilityStatus": "Verfügbarkeitsstatus",
+        "notes": "Notizen",
+        "submit": "Absenden"
+    },
+    "AddLocationModal": {
+        "title": "Neues Lebensmittelzentrum hinzufügen",
+        "name": "Name",
+        "address": "Adresse",
+        "type": "Typ",
+        "dietaryRestrictions": "Ernährungsbeschränkungen",
+        "latitude": "Breitengrad",
+        "longitude": "Längengrad",
+        "phone": "Telefon",
+        "email": "E-Mail",
+        "website": "Website",
+        "operatingHours": "Öffnungszeiten",
+        "cancel": "Abbrechen",
+        "submit": "Absenden"
+    }
+} 

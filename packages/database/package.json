@@ -10,7 +10,8 @@
   "license": "MIT",
   "dependencies": {
     "@crowdsourced-meal-map/shared": "workspace:*",
-    "@supabase/supabase-js": "^2.50.3"
+    "@supabase/supabase-js": "^2.50.3",
+    "next-intl": "^4.3.4"
   },
   "scripts": {
     "build": "tsc",

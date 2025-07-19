@@ -13,7 +13,6 @@ interface LocationPopupProps {
     lng: number;
   };
   onClose: () => void;
-  // Optional food center specific data
   foodCenter?: FoodCenter | undefined;
 }
 
@@ -39,7 +38,7 @@ const LocationPopup = ({
   return (
     <div className="bg-stone-50 rounded-lg shadow-lg border border-stone-200 max-w-sm w-full z-50">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-stone-200">
+      <div className="flex items-center justify-between p-3 border-b border-stone-200">
         <div className="flex items-center space-x-2">
           <MapPin className="h-5 w-5 text-stone-500" />
           <h3 className="font-semibold text-stone-900">{title}</h3>

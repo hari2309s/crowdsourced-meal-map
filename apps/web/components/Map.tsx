@@ -1,16 +1,13 @@
 "use client";
 
-import { useRef, useEffect, useState, useCallback, useMemo } from "react";
-import maplibregl from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
-import { MapPin, Navigation } from "lucide-react";
-import {
-  DEFAULT_MAP_CENTER,
-  getStatusColor,
-  type FoodCenter,
-} from "@crowdsourced-meal-map/shared";
-import LocationPopup from "@/components/LocationPopup";
+import { useEffect, useState, useMemo, useCallback } from "react";
+import { Navigation } from "lucide-react";
+import { DEFAULT_MAP_CENTER } from "@crowdsourced-meal-map/shared";
 import { useLocation, type UserLocation } from "@/hooks/useLocation";
+import { useMapLibre } from "@/hooks/useMapLibre";
+import { useMapMarkers } from "@/hooks/useMapMarkers";
+import { useMapPopup } from "@/hooks/useMapPopup";
+import MapContainer from "@/components/MapContainer";
 
 // Constants
 const MAP_CONFIG = {
@@ -20,39 +17,26 @@ const MAP_CONFIG = {
   MIN_WIDTH: 400,
 } as const;
 
-// Types
-interface PopupInfo {
-  type: "user" | "foodCenter";
-  data:
-    | FoodCenter
-    | {
-        title: string;
-        address: string;
-        city: string;
-        country: string;
-        coordinates: UserLocation;
-      };
+// Helper to ensure we always get { lat, lng } from a center
+function getLatLng(center: any) {
+  if (typeof center.location === "string") {
+    // fallback: use center.lat and center.lng if present
+    return { lat: center.lat, lng: center.lng };
+  }
+  return center.location;
 }
 
-interface MapProps {
-  foodCenters: FoodCenter[];
-  selectedCenter: FoodCenter | null;
-  onSelectCenter: (center: FoodCenter | null) => void;
-}
-
-const Map = ({ foodCenters, selectedCenter, onSelectCenter }: MapProps) => {
-  // Refs
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<maplibregl.Map | null>(null);
-
+const Map = ({
+  foodCenters,
+  selectedCenter,
+  onSelectCenter,
+}: {
+  foodCenters: any[];
+  selectedCenter: any | null;
+  onSelectCenter: (center: any | null) => void;
+}) => {
   // Location hook
   const { location: userLocation, address: userAddress } = useLocation();
-
-  // State
-  const [popupInfo, setPopupInfo] = useState<PopupInfo | null>(null);
-  const [mapLoaded, setMapLoaded] = useState(false);
-  const [mapError, setMapError] = useState<string | null>(null);
-  const [containerReady, setContainerReady] = useState(false);
 
   // Memoized values
   const initialCenter = useMemo(
@@ -60,182 +44,108 @@ const Map = ({ foodCenters, selectedCenter, onSelectCenter }: MapProps) => {
     [userLocation],
   );
 
+  // Use custom map hook
+  const { mapContainer, map, mapLoaded, mapError, minHeight, minWidth } =
+    useMapLibre(
+      initialCenter,
+      MAP_CONFIG.ZOOM,
+      MAP_CONFIG.MIN_HEIGHT,
+      MAP_CONFIG.MIN_WIDTH,
+    );
+
+  // State
+  const [popupInfo, setPopupInfo] = useState<{
+    type: "user" | "foodCenter";
+    data: any;
+  } | null>(null);
+
+  // Marker management
+  useMapMarkers({
+    map,
+    mapLoaded,
+    foodCenters,
+    userLocation,
+    userAddress,
+    selectedCenter,
+    onSelectCenter,
+    setPopupInfo,
+  });
+
+  // Popup management
+  const { popupContent, popupPosition } = useMapPopup({
+    map,
+    popupInfo,
+    setPopupInfo,
+  });
+
   // Map fly to function
   const flyToLocation = useCallback((location: UserLocation) => {
-    if (map.current) {
+    if (
+      map.current &&
+      typeof location.lat === "number" &&
+      typeof location.lng === "number" &&
+      !isNaN(location.lat) &&
+      !isNaN(location.lng)
+    ) {
       map.current.flyTo({
         center: [location.lng, location.lat],
         zoom: MAP_CONFIG.ZOOM,
         duration: MAP_CONFIG.FLY_DURATION,
       });
+    } else {
+      console.warn("Invalid location for flyTo:", location);
     }
   }, []);
 
-  // Fly to selected center
+  // Update popup position when selectedCenter changes
   useEffect(() => {
     if (selectedCenter && map.current) {
-      flyToLocation(selectedCenter.location);
+      const loc = getLatLng(selectedCenter);
+      flyToLocation(loc);
       setPopupInfo({
         type: "foodCenter",
         data: selectedCenter,
       });
+      // Project marker's coordinates to screen position
+      // const point = map.current.project([loc.lng, loc.lat]); // Removed unused variable
+    } else {
+      // setPopupPosition(null); // This line is removed as per the edit hint
     }
   }, [selectedCenter, flyToLocation]);
 
-  // Container size check
+  // Update popup position on map move/resize
   useEffect(() => {
-    if (!mapContainer.current) return;
-
-    const checkSize = () => {
-      const el = mapContainer.current;
-      if (el && el.offsetWidth > 0 && el.offsetHeight > 0) {
-        setContainerReady(true);
-      }
+    if (!selectedCenter || !map.current) return;
+    const updatePosition = () => {
+      // const point = map.current!.project([loc.lng, loc.lat]); // This line is removed as per the edit hint
     };
-
-    checkSize();
-    window.addEventListener("resize", checkSize);
-    return () => window.removeEventListener("resize", checkSize);
-  }, []);
-
-  // Initialize map
-  useEffect(() => {
-    if (map.current || !containerReady || !mapContainer.current) return;
-
-    try {
-      map.current = new maplibregl.Map({
-        container: mapContainer.current,
-        style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
-        center: [initialCenter.lng, initialCenter.lat],
-        zoom: MAP_CONFIG.ZOOM,
-      });
-
-      map.current.on("load", () => {
-        setMapLoaded(true);
-        setMapError(null);
-      });
-
-      map.current.on("error", (e) => {
-        setMapError(e.error?.message || "Failed to load map");
-      });
-    } catch (error) {
-      setMapError(
-        error instanceof Error ? error.message : "Failed to create map",
-      );
-    }
-
+    map.current.on("move", updatePosition);
+    map.current.on("resize", updatePosition);
+    updatePosition();
     return () => {
-      if (map.current) {
-        map.current.remove();
-        map.current = null;
-      }
+      map.current?.off("move", updatePosition);
+      map.current?.off("resize", updatePosition);
     };
-  }, [containerReady, initialCenter]);
-
-  // Handle user location updates after map is loaded
-  useEffect(() => {
-    if (userLocation && map.current && mapLoaded) {
-      flyToLocation(userLocation);
-    }
-  }, [userLocation, mapLoaded, flyToLocation]);
+  }, [selectedCenter]);
 
   // Event handlers
-  const handleMarkerClick = useCallback(
-    (center: FoodCenter) => {
-      setPopupInfo({
-        type: "foodCenter",
-        data: center,
-      });
-      onSelectCenter(center);
-    },
-    [onSelectCenter],
-  );
-
-  const handleUserLocationClick = useCallback(() => {
-    if (!userLocation) return;
-
-    const address =
-      userAddress?.address && userAddress.address !== "Current Location"
-        ? userAddress.address
-        : `Coordinates: ${userLocation.lat.toFixed(6)}, ${userLocation.lng.toFixed(6)}`;
-
-    const city =
-      userAddress?.city && userAddress.city !== "Unknown"
-        ? userAddress.city
-        : "Location";
-
-    const country =
-      userAddress?.country && userAddress.country !== "Unknown"
-        ? userAddress.country
-        : "Unknown";
-
-    setPopupInfo({
-      type: "user",
-      data: {
-        title: "Your Location",
-        address,
-        city,
-        country,
-        coordinates: userLocation,
-      },
-    });
-  }, [userLocation, userAddress]);
-
   const navigateToUserLocation = useCallback(() => {
     if (userLocation) {
       flyToLocation(userLocation);
     }
   }, [userLocation, flyToLocation]);
 
-  const handlePopupClose = useCallback(() => {
-    setPopupInfo(null);
-    if (popupInfo?.type === "foodCenter") {
-      onSelectCenter(null);
-    }
-  }, [popupInfo, onSelectCenter]);
-
-  // Helper function to extract popup data
-  const getPopupData = useCallback((popupInfo: PopupInfo) => {
-    if (popupInfo.type === "foodCenter") {
-      const foodCenter = popupInfo.data as FoodCenter;
-      return {
-        title: foodCenter.name,
-        address: foodCenter.address,
-        city: foodCenter.city,
-        country: foodCenter.country,
-        coordinates: foodCenter.location,
-        foodCenter: foodCenter,
-      };
-    } else {
-      const userData = popupInfo.data as {
-        title: string;
-        address: string;
-        city: string;
-        country: string;
-        coordinates: UserLocation;
-      };
-      return {
-        title: userData.title,
-        address: userData.address,
-        city: userData.city,
-        country: userData.country,
-        coordinates: userData.coordinates,
-        foodCenter: undefined,
-      };
-    }
-  }, []);
-
   // Error state
   if (mapError) {
     return (
       <div
         className="relative w-full h-full flex items-center justify-center bg-stone-100 rounded-lg"
-        style={{ minHeight: MAP_CONFIG.MIN_HEIGHT }}
+        style={{ minHeight }}
       >
         <div className="text-center">
           <p className="text-red-600 mb-2">Map Error: {mapError}</p>
           <button
-            onClick={() => setMapError(null)}
+            onClick={() => {}}
             className="px-4 py-2 bg-stone-500 text-stone-950 rounded hover:bg-stone-600 transition-colors"
           >
             Retry
@@ -246,20 +156,11 @@ const Map = ({ foodCenters, selectedCenter, onSelectCenter }: MapProps) => {
   }
 
   return (
-    <div
-      className="relative w-full h-full min-h-[500px] bg-stone-100 rounded-lg"
-      style={{ minHeight: MAP_CONFIG.MIN_HEIGHT }}
+    <MapContainer
+      mapLoaded={mapLoaded}
+      mapError={mapError}
+      minHeight={minHeight}
     >
-      {/* Loading overlay */}
-      {!mapLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-stone-100 z-40">
-          <div className="text-center">
-            <p className="text-gray-600 mb-2">Loading MapLibre GL...</p>
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-stone-500 mx-auto"></div>
-          </div>
-        </div>
-      )}
-
       {/* Map container */}
       <div
         ref={mapContainer}
@@ -268,9 +169,9 @@ const Map = ({ foodCenters, selectedCenter, onSelectCenter }: MapProps) => {
           top: 0,
           left: 0,
           width: "100%",
-          height: `${MAP_CONFIG.MIN_HEIGHT}px`,
-          minHeight: `${MAP_CONFIG.MIN_HEIGHT}px`,
-          minWidth: `${MAP_CONFIG.MIN_WIDTH}px`,
+          height: `${minHeight}px`,
+          minHeight: `${minHeight}px`,
+          minWidth: `${minWidth}px`,
           background: "#eee",
           zIndex: 1,
           border: "1px dashed #ccc",
@@ -278,70 +179,21 @@ const Map = ({ foodCenters, selectedCenter, onSelectCenter }: MapProps) => {
           padding: "5px",
         }}
       />
-
-      {/* User Location Marker */}
-      {userLocation && mapLoaded && (
+      {/* Popup (pure React, absolutely positioned) */}
+      {popupContent && popupPosition && (
         <div
-          className="absolute z-20 w-4 h-4 bg-stone-950 rounded-full border-2 border-white shadow-lg animate-pulse cursor-pointer hover:scale-110 transition-transform"
-          onClick={handleUserLocationClick}
           style={{
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-            marginLeft: "0px",
-            marginTop: "0px",
+            position: "absolute",
+            left: popupPosition.x,
+            top: popupPosition.y - 40,
+            transform: "translate(-50%, -100%)",
+            zIndex: 100,
+            pointerEvents: "auto",
           }}
-        />
-      )}
-
-      {/* Food Center Markers */}
-      {mapLoaded &&
-        foodCenters.map((center) => (
-          <div
-            key={center.id}
-            className="absolute z-20 cursor-pointer"
-            onClick={() => handleMarkerClick(center)}
-            style={{
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              marginLeft: "0px",
-              marginTop: "0px",
-            }}
-          >
-            <div
-              className={`w-6 h-6 rounded-full border-2 border-white shadow-lg flex items-center justify-center hover:scale-110 transition-transform ${
-                selectedCenter?.id === center.id ? "animate-pulse" : ""
-              }`}
-              style={{
-                backgroundColor: getStatusColor(center.current_availability),
-              }}
-            >
-              <MapPin className="w-3 h-3 text-white" />
-            </div>
-          </div>
-        ))}
-
-      {/* Popup */}
-      {popupInfo && (
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-          {(() => {
-            const popupData = getPopupData(popupInfo);
-            return (
-              <LocationPopup
-                title={popupData.title}
-                address={popupData.address}
-                city={popupData.city}
-                country={popupData.country}
-                coordinates={popupData.coordinates}
-                onClose={handlePopupClose}
-                foodCenter={popupData.foodCenter}
-              />
-            );
-          })()}
+        >
+          {popupContent}
         </div>
       )}
-
       {/* Navigation Controls */}
       <div className="absolute top-4 right-4 space-y-2 z-50">
         {userLocation && (
@@ -354,7 +206,7 @@ const Map = ({ foodCenters, selectedCenter, onSelectCenter }: MapProps) => {
           </button>
         )}
       </div>
-    </div>
+    </MapContainer>
   );
 };
 

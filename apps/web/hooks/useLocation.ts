@@ -12,9 +12,6 @@ export interface UserAddress {
   country: string;
 }
 
-// Constants
-const NOMINATIM_URL = "https://nominatim.openstreetmap.org/reverse";
-
 // Address parsing function
 const parseAddressFromNominatim = (data: any): UserAddress => {
   if (data.address) {
@@ -113,7 +110,7 @@ export function useLocation() {
         setLoading(true);
         setError(null);
 
-        const url = `${NOMINATIM_URL}?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
+        const url = `${process.env["NEXT_PUBLIC_NOMINATIM_BASE_URL"]}?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
         const response = await fetch(url);
 
         if (!response.ok) {

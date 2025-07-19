@@ -18,7 +18,7 @@ const AuthButton = () => {
     });
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      (_event, session) => {
         setUser(session?.user ?? null);
       },
     );

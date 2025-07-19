@@ -6,6 +6,7 @@ import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import { getFoodCenters } from "@crowdsourced-meal-map/database";
 import type { FoodCenter } from "@crowdsourced-meal-map/shared";
+import { motion } from "framer-motion";
 
 export default function HomePage() {
   const [foodCenters, setFoodCenters] = useState<FoodCenter[]>([]);
@@ -16,24 +17,17 @@ export default function HomePage() {
     city: "Berlin",
   });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadFoodCenters() {
       try {
-        console.log("Loading food centers with filters:", filters);
         const centers = await getFoodCenters({
           ...filters,
           verified: true,
         });
-        console.log("Loaded food centers:", centers);
         setFoodCenters(centers);
-        setError(null);
       } catch (error) {
         console.error("Error loading food centers:", error);
-        setError(
-          error instanceof Error ? error.message : "Unknown error occurred",
-        );
       } finally {
         setLoading(false);
       }
@@ -42,41 +36,14 @@ export default function HomePage() {
     loadFoodCenters();
   }, [filters]);
 
-  console.log(
-    "HomePage render - foodCenters:",
-    foodCenters.length,
-    "loading:",
-    loading,
-    "error:",
-    error,
-  );
-
-  if (error) {
-    return (
-      <div className="h-screen flex flex-col">
-        <Header />
-        <div className="flex-1 flex items-center justify-center bg-red-50">
-          <div className="text-center max-w-md mx-auto p-6">
-            <h2 className="text-xl font-bold text-red-800 mb-4">
-              Database Connection Error
-            </h2>
-            <p className="text-red-600 mb-4">{error}</p>
-            <button
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-            >
-              Retry
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="h-screen flex flex-col">
+    <motion.div
+      className="h-screen w-screen flex flex-col items-center justify-center bg-stone-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
       <Header />
-      <div className="flex-1 flex">
+      <div className="flex-1 flex items-center justify-center w-[90%] py-4">
         <Sidebar
           foodCenters={foodCenters}
           selectedCenter={selectedCenter}
@@ -85,7 +52,7 @@ export default function HomePage() {
           onFiltersChange={setFilters}
           loading={loading}
         />
-        <div className="flex-1">
+        <div className="flex-1 py-4 pl-4 pr-0">
           <Map
             foodCenters={foodCenters}
             selectedCenter={selectedCenter}
@@ -93,6 +60,6 @@ export default function HomePage() {
           />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

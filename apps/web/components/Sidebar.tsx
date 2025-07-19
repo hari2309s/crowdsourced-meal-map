@@ -85,7 +85,7 @@ const Sidebar = ({
 
   return (
     <div className="w-full md:w-96 h-[600px] bg-white border-[1px] border-dashed border-stone-700 rounded-lg flex flex-col">
-      <div className="p-4 border-b border-stone-700">
+      <div className="p-4 border-dashed border-b border-stone-700">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="relative bg-stone-100 border-[1px] border-dashed border-stone-600 rounded-lg h-9 focus:border-stone-600 focus:ring-stone-600 focus:outline-none">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-stone-400" />
@@ -99,8 +99,9 @@ const Sidebar = ({
 
           <button
             type="button"
+            disabled
             onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className="btn btn-secondary btn-sm w-full flex items-center justify-between"
+            className="btn btn-secondary btn-sm w-full flex items-center justify-between disabled:cursor-not-allowed"
           >
             <span className="flex items-center">
               <Filter className="h-4 w-4 mr-2" />
