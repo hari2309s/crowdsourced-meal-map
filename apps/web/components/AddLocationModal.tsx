@@ -14,6 +14,7 @@ import {
   locationSchema,
   DEFAULT_LOCATION_FORM,
   type LocationForm,
+  type DietaryRestriction,
 } from "@crowdsourced-meal-map/shared";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -42,13 +43,33 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
       const { data: sessionData } = await supabase.auth.getSession();
       const userId = sessionData.session?.user.id;
 
+      if (!userId) {
+        console.error("User not authenticated");
+        return;
+      }
+
+      // Ensure lat and lng are numbers, defaulting to 0 if undefined
+      const lat = data.lat ?? 0;
+      const lng = data.lng ?? 0;
+
       await createFoodCenter({
         ...data,
-        location: { lat: data.lat, lng: data.lng },
+        location: { lat, lng },
         created_by: userId,
         verified: false,
         current_availability: "unknown",
-      } as any);
+        description: data.description ?? "",
+        postal_code: data.postal_code ?? "",
+        phone: data.phone ?? "",
+        email: data.email ?? "",
+        website: data.website ?? "",
+        contact_person: "",
+        languages_spoken: data.languages ?? [],
+        capacity: data.capacity ?? 0,
+        dietary_restrictions: (data.dietary_restrictions ??
+          []) as DietaryRestriction[],
+        operating_hours: data.operating_hours ?? {},
+      });
       reset();
       onClose();
     } catch (error) {
@@ -83,10 +104,7 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
               </button>
             </div>
 
-            <form
-              onSubmit={handleSubmit(onSubmit as any)}
-              className="space-y-4"
-            >
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="flex justify-between">
                 <label
                   htmlFor="name"
@@ -280,14 +298,14 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
                       <input
                         id="operatingHours"
                         type="time"
-                        {...(register as any)(`operating_hours.${day}.open`)}
-                        className="bg-stone-100 border-[1px] border-stone-600 rounded-lg p-2 h-7 focus:border-stone-600 focus:ring-stone-600 focus:outline-none flex-1"
+                        {...register(`operating_hours.${day}.open`)}
+                        className="bg-stone-100 border-[1px] border-dashed border-stone-600 rounded-lg p-2 h-7 focus:border-stone-600 focus:ring-stone-600 focus:outline-none flex-1"
                       />
                       <input
                         id="operatingHours"
                         type="time"
-                        {...(register as any)(`operating_hours.${day}.close`)}
-                        className="bg-stone-100 border-[1px] border-stone-600 rounded-lg p-2 h-7 focus:border-stone-600 focus:ring-stone-600 focus:outline-none flex-1"
+                        {...register(`operating_hours.${day}.close`)}
+                        className="bg-stone-100 border-[1px] border-dashed border-stone-600 rounded-lg p-2 h-7 focus:border-stone-600 focus:ring-stone-600 focus:outline-none flex-1"
                       />
                     </div>
                   ),

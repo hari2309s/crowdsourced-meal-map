@@ -30,7 +30,8 @@ import { motion, AnimatePresence } from "framer-motion";
 type SidebarProps = {
   foodCenters: FoodCenter[];
   selectedCenter: FoodCenter | null;
-  onSelectCenter: (center: FoodCenter | null) => void;
+  // eslint-disable-next-line no-unused-vars
+  onSelectCenter: (_: FoodCenter | null) => void;
   filters: {
     type: string;
     dietary_restrictions: string[];

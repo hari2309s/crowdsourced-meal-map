@@ -14,6 +14,7 @@ import {
   locationSchema,
   DEFAULT_LOCATION_FORM,
   type LocationForm,
+  DietaryRestriction,
 } from "@crowdsourced-meal-map/shared";
 
 export default function AddLocationPage() {
@@ -38,13 +39,33 @@ export default function AddLocationPage() {
       const { data: sessionData } = await supabase.auth.getSession();
       const userId = sessionData.session?.user.id;
 
+      if (!userId) {
+        console.error("User not authenticated");
+        return;
+      }
+
+      // Ensure lat and lng are numbers, defaulting to 0 if undefined
+      const lat = data.lat ?? 0;
+      const lng = data.lng ?? 0;
+
       await createFoodCenter({
         ...data,
-        location: { lat: data.lat, lng: data.lng },
+        location: { lat, lng },
         created_by: userId,
         verified: false,
         current_availability: "unknown",
-      } as any);
+        description: data.description ?? "",
+        postal_code: data.postal_code ?? "",
+        phone: data.phone ?? "",
+        email: data.email ?? "",
+        website: data.website ?? "",
+        contact_person: "",
+        languages_spoken: data.languages ?? [],
+        capacity: data.capacity ?? 0,
+        dietary_restrictions: (data.dietary_restrictions ??
+          []) as DietaryRestriction[],
+        operating_hours: data.operating_hours ?? {},
+      });
       reset();
       router.push(`/${locale}/`);
     } catch (error) {
@@ -82,7 +103,7 @@ export default function AddLocationPage() {
             {t("title")}
           </motion.h2>
           <form
-            onSubmit={handleSubmit(onSubmit as any)}
+            onSubmit={handleSubmit(onSubmit)}
             className="grid grid-cols-1 sm:grid-cols-3 gap-6"
             aria-label="Add Food Center Location"
           >
@@ -259,12 +280,12 @@ export default function AddLocationPage() {
                       </span>
                       <input
                         type="time"
-                        {...(register as any)(`operating_hours.${day}.open`)}
+                        {...register(`operating_hours.${day}.open`)}
                         className="w-full px-2 py-1 bg-stone-50 border-[1px] border-dashed border-stone-600 rounded-lg focus:border-stone-950 focus:ring-2 focus:ring-stone-950 text-stone-900"
                       />
                       <input
                         type="time"
-                        {...(register as any)(`operating_hours.${day}.close`)}
+                        {...register(`operating_hours.${day}.close`)}
                         className="w-full px-2 py-1 bg-stone-50 border-[1px] border-dashed border-stone-600 rounded-lg focus:border-stone-950 focus:ring-2 focus:ring-stone-950 text-stone-900"
                       />
                     </motion.div>

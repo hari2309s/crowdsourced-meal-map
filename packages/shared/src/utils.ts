@@ -137,8 +137,55 @@ export function handleLocaleChange(
  * @param lng Longitude coordinate
  */
 export function openLocationInMaps(lat: number, lng: number): void {
-  const url = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=15`;
-  window.open(url, "_blank");
+  // Check if we're on a mobile device
+  const isMobile =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent,
+    );
+
+  let url: string;
+
+  if (isMobile) {
+    // Use platform-specific URL schemes for native map apps
+    const userAgent = navigator.userAgent.toLowerCase();
+
+    if (/iphone|ipad|ipod/.test(userAgent)) {
+      // iOS - try Apple Maps first, then Google Maps
+      url = `maps://maps.apple.com/?q=${lat},${lng}`;
+    } else if (/android/.test(userAgent)) {
+      // Android - try Google Maps first, then other map apps
+      url = `geo:${lat},${lng}?q=${lat},${lng}`;
+    } else {
+      // Fallback for other mobile devices
+      url = `https://maps.google.com/maps?q=${lat},${lng}`;
+    }
+  } else {
+    // Desktop - detect OS and use appropriate map application
+    const userAgent = navigator.userAgent.toLowerCase();
+
+    if (/macintosh|mac os x/.test(userAgent)) {
+      // macOS - try Apple Maps, then Google Maps
+      url = `maps://maps.apple.com/?q=${lat},${lng}`;
+    } else if (/windows/.test(userAgent)) {
+      // Windows - try Microsoft Maps, then Google Maps
+      url = `bingmaps://?cp=${lat}~${lng}&lvl=15`;
+    } else if (/linux/.test(userAgent)) {
+      // Linux - use Google Maps as default (most Linux users prefer web-based maps)
+      url = `https://maps.google.com/maps?q=${lat},${lng}`;
+    } else {
+      // Fallback for other desktop OS
+      url = `https://maps.google.com/maps?q=${lat},${lng}`;
+    }
+  }
+
+  // Try to open the native app, fallback to web if it fails
+  try {
+    window.location.href = url;
+  } catch (error) {
+    // Fallback to web-based maps
+    const webUrl = `https://maps.google.com/maps?q=${lat},${lng}`;
+    window.open(webUrl, "_blank");
+  }
 }
 
 /**
@@ -170,4 +217,22 @@ export function isLocaleSupported(
   }[],
 ): boolean {
   return supportedLocales.some((l) => l.code === locale && l.enabled);
+}
+
+/**
+ * Returns the background color class for a food center based on its availability status
+ * @param availability The availability status of the food center
+ * @returns Tailwind CSS class for the background color
+ */
+export function getAvailabilityBgColor(availability?: string): string {
+  switch (availability) {
+    case "available":
+      return "bg-green-50";
+    case "limited":
+      return "bg-yellow-50";
+    case "unavailable":
+      return "bg-red-50";
+    default:
+      return "bg-stone-50";
+  }
 }

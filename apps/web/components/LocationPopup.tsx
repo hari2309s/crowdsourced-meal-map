@@ -15,6 +15,7 @@ import {
   getFoodCenterTypeColorClasses,
   openLocationInMaps,
   copyCoordinatesToClipboard,
+  getAvailabilityBgColor,
 } from "@crowdsourced-meal-map/shared";
 
 interface LocationPopupProps {
@@ -52,7 +53,9 @@ const LocationPopup = ({
   };
 
   return (
-    <div className="bg-stone-50 rounded-lg shadow-lg border border-stone-200 max-w-sm w-full z-50">
+    <div
+      className={`${getAvailabilityBgColor(foodCenter?.current_availability)} rounded-lg shadow-lg border border-stone-200 max-w-sm w-full z-50`}
+    >
       <div className="flex items-center justify-between p-3 border-b border-stone-200">
         <div className="flex items-center space-x-2">
           <MapPin className="h-5 w-5 text-stone-500" />
@@ -68,14 +71,12 @@ const LocationPopup = ({
 
       <div className="p-4 space-y-3">
         <div>
-          <p className="text-sm text-stone-600 font-medium">{address}</p>
-          {city &&
-            city.split(", ").map((part, index) => (
-              <p key={index} className="text-sm text-stone-600">
-                {part}
-              </p>
-            ))}
-          <p className="text-sm text-stone-600">{country}</p>
+          <p className="text-sm text-stone-600 font-medium">
+            {address}
+            {foodCenter?.postal_code && `, ${foodCenter.postal_code}`}
+            {city && `, ${city}`}
+            {country && `, ${country}`}
+          </p>
         </div>
 
         {foodCenter && (
@@ -107,13 +108,25 @@ const LocationPopup = ({
               {foodCenter.phone && (
                 <div className="flex items-center space-x-2 text-sm text-stone-600">
                   <Phone className="h-4 w-4" />
-                  <span>{foodCenter.phone}</span>
+                  <a
+                    href={`tel:${foodCenter.phone.replace(/\s+/g, "")}`}
+                    className="text-stone-600 hover:text-stone-800 hover:underline transition-colors cursor-pointer"
+                    title="Call this number"
+                  >
+                    {foodCenter.phone}
+                  </a>
                 </div>
               )}
               {foodCenter.email && (
                 <div className="flex items-center space-x-2 text-sm text-stone-600">
                   <Mail className="h-4 w-4" />
-                  <span>{foodCenter.email}</span>
+                  <a
+                    href={`mailto:${foodCenter.email}?subject=Inquiry about ${encodeURIComponent(title)}&body=Hello,%0D%0A%0D%0AI would like to get more information about your services.%0D%0A%0D%0ALocation: ${encodeURIComponent(address)}, ${encodeURIComponent(city)}, ${encodeURIComponent(country)}%0D%0A%0D%0AThank you.`}
+                    className="text-stone-600 hover:text-stone-800 hover:underline transition-colors cursor-pointer"
+                    title="Send email"
+                  >
+                    {foodCenter.email}
+                  </a>
                 </div>
               )}
               {foodCenter.website && (

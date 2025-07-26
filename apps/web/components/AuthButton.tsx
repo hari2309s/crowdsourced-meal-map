@@ -5,12 +5,13 @@ import { useTranslations } from "next-intl";
 import { User } from "lucide-react";
 import { useSupabase } from "@/providers";
 import { useRouter } from "next/navigation";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 const AuthButton = () => {
   const t = useTranslations("header");
   const { supabase } = useSupabase();
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
