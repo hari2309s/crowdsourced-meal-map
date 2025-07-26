@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 interface MapContainerProps {
@@ -39,7 +41,6 @@ const MapContainer: React.FC<MapContainerProps> = ({
       className="relative w-full h-full min-h-[500px] bg-stone-100 rounded-lg"
       style={{ minHeight }}
     >
-      {/* Loading overlay */}
       {!mapLoaded && (
         <div className="absolute inset-0 flex items-center justify-center bg-stone-100 z-40">
           <div className="text-center">

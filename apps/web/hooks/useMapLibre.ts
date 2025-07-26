@@ -14,11 +14,10 @@ export function useMapLibre(
 ) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<maplibregl.Map | null>(null);
-  const [mapLoaded, setMapLoaded] = useState(false);
-  const [containerReady, setContainerReady] = useState(false);
+  const [mapLoaded, setMapLoaded] = useState<boolean>(false);
+  const [containerReady, setContainerReady] = useState<boolean>(false);
   const [mapError, setMapError] = useState<string | null>(null);
 
-  // Container size check
   useEffect(() => {
     if (!mapContainer.current) return;
     const checkSize = () => {
@@ -32,7 +31,6 @@ export function useMapLibre(
     return () => window.removeEventListener("resize", checkSize);
   }, []);
 
-  // Initialize map
   useEffect(() => {
     if (map.current || !containerReady || !mapContainer.current) return;
     try {
@@ -47,7 +45,7 @@ export function useMapLibre(
         setMapError(null);
       });
       map.current.on("error", (e) => {
-        setMapError(e.error?.message || "Failed to load map");
+        setMapError(e.error?.message ?? "Failed to load map");
       });
     } catch (error) {
       setMapError(

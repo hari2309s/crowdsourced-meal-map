@@ -23,9 +23,11 @@ export function useMapPopup({
       setPopupContent(null);
       return;
     }
+
     let lng: number | undefined,
       lat: number | undefined,
       content: ReactNode | null = null;
+
     if (popupInfo.type === "user") {
       lng = popupInfo.data.location.lng;
       lat = popupInfo.data.location.lat;
@@ -59,6 +61,7 @@ export function useMapPopup({
         />
       );
     }
+
     if (lng !== undefined && lat !== undefined) {
       const point = map.current.project([lng, lat]);
       setPopupPosition({ x: point.x, y: point.y });
@@ -67,14 +70,16 @@ export function useMapPopup({
       setPopupPosition(null);
       setPopupContent(null);
     }
-    // Update position on map move/resize
+
     const updatePosition = () => {
       if (!map.current || lng === undefined || lat === undefined) return;
       const point = map.current.project([lng, lat]);
       setPopupPosition({ x: point.x, y: point.y });
     };
+
     map.current.on("move", updatePosition);
     map.current.on("resize", updatePosition);
+
     return () => {
       map.current?.off("move", updatePosition);
       map.current?.off("resize", updatePosition);

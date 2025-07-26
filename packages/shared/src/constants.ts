@@ -6,6 +6,14 @@ export const FOOD_CENTER_TYPES = [
   { value: "pantry", label: "Pantry" },
 ] as const;
 
+export const FOOD_CENTER_TYPE_COLORS: Record<string, string> = {
+  food_bank: "#2563eb", // blue
+  community_kitchen: "#16a34a", // green
+  soup_kitchen: "#f59e42", // orange
+  mobile_unit: "#d946ef", // purple
+  pantry: "#f43f5e", // red
+};
+
 export const DIETARY_RESTRICTIONS = [
   { value: "vegetarian", label: "Vegetarian" },
   { value: "vegan", label: "Vegan" },
@@ -16,12 +24,29 @@ export const DIETARY_RESTRICTIONS = [
   { value: "nut_free", label: "Nut Free" },
 ] as const;
 
+export const DIETARY_RESTRICTION_COLORS: Record<string, string> = {
+  vegetarian: "#22c55e", // green-500
+  vegan: "#15803d", // green-700
+  halal: "#0d9488", // teal-600
+  kosher: "#4f46e5", // indigo-600
+  gluten_free: "#f59e0b", // amber-500
+  dairy_free: "#06b6d4", // cyan-500
+  nut_free: "#ec4899", // pink-500
+};
+
 export const AVAILABILITY_STATUSES = [
   { value: "available", label: "Available", color: "green" },
   { value: "limited", label: "Limited", color: "yellow" },
   { value: "unavailable", label: "Unavailable", color: "red" },
   { value: "unknown", label: "Unknown", color: "gray" },
 ] as const;
+
+export const AVAILABILITY_STATUS_COLORS: Record<string, string> = {
+  available: "text-green-700 bg-green-100",
+  limited: "text-yellow-700 bg-yellow-100",
+  unavailable: "text-red-700 bg-red-100",
+  unknown: "text-stone-600 bg-stone-100",
+};
 
 export const LANGUAGES = [
   { value: "en", label: "English" },

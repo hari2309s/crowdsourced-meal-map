@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 
-// Types
 export interface UserLocation {
   lat: number;
   lng: number;
@@ -12,12 +11,10 @@ export interface UserAddress {
   country: string;
 }
 
-// Address parsing function
 const parseAddressFromNominatim = (data: any): UserAddress => {
   if (data.address) {
     const addr = data.address;
 
-    // Street address - format as "Street Name HouseNumber"
     let address = "Current Location";
     if (addr.road) {
       address = addr.house_number
@@ -27,17 +24,14 @@ const parseAddressFromNominatim = (data: any): UserAddress => {
       address = addr.suburb;
     }
 
-    // Build city information
     const cityParts: string[] = [];
 
-    // Add district/suburb first
     if (addr.district) {
       cityParts.push(addr.district);
     } else if (addr.suburb && addr.suburb !== address) {
       cityParts.push(addr.suburb);
     }
 
-    // Add postcode + city
     if (addr.postcode && (addr.city || addr.town || addr.village)) {
       const cityName = addr.city || addr.town || addr.village;
       cityParts.push(`${addr.postcode} ${cityName}`);
@@ -50,11 +44,10 @@ const parseAddressFromNominatim = (data: any): UserAddress => {
     return {
       address,
       city: cityParts.join(", "),
-      country: addr.country || "Unknown",
+      country: addr.country ?? "Unknown",
     };
   }
 
-  // Fallback parsing
   if (data.display_name) {
     const addressParts = data.display_name.split(", ");
     const middleParts = addressParts.slice(1, -1);
@@ -74,7 +67,9 @@ const parseAddressFromNominatim = (data: any): UserAddress => {
     }
 
     const cityParts: string[] = [];
+
     if (district) cityParts.push(district);
+
     if (postcode && cityName) {
       cityParts.push(`${postcode} ${cityName}`);
     } else if (postcode) {
@@ -84,9 +79,9 @@ const parseAddressFromNominatim = (data: any): UserAddress => {
     }
 
     return {
-      address: addressParts[0] || "Current Location",
+      address: addressParts[0] ?? "Current Location",
       city: cityParts.join(", "),
-      country: addressParts[addressParts.length - 1] || "Unknown",
+      country: addressParts[addressParts.length - 1] ?? "Unknown",
     };
   }
 
@@ -100,10 +95,9 @@ const parseAddressFromNominatim = (data: any): UserAddress => {
 export function useLocation() {
   const [location, setLocation] = useState<UserLocation | null>(null);
   const [address, setAddress] = useState<UserAddress | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Reverse geocoding function
   const getAddressFromCoordinates = useCallback(
     async (lat: number, lng: number) => {
       try {
@@ -137,7 +131,6 @@ export function useLocation() {
     [],
   );
 
-  // Get current location
   const getCurrentLocation = useCallback(() => {
     if (!navigator.geolocation) {
       setError("Geolocation is not supported by this browser");
@@ -164,12 +157,9 @@ export function useLocation() {
     );
   }, [getAddressFromCoordinates]);
 
-  // Auto-get location on mount
   useEffect(() => {
     getCurrentLocation();
   }, [getCurrentLocation]);
-
-  // Manual location update
   const updateLocation = useCallback(
     (newLocation: UserLocation) => {
       setLocation(newLocation);
@@ -178,7 +168,6 @@ export function useLocation() {
     [getAddressFromCoordinates],
   );
 
-  // Reset location
   const resetLocation = useCallback(() => {
     setLocation(null);
     setAddress(null);

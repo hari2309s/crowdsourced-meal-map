@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Plus } from "lucide-react";
 import Image from "next/image";
@@ -20,13 +20,12 @@ const SUPPORTED_LOCALES = [
 
 const Header = () => {
   const t = useTranslations("Header");
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const router = useRouter();
   const locale = useLocale();
 
   const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newLocale = e.target.value;
-    // Replace the first segment of the path with the new locale
     const path = window.location.pathname;
     const segments = path.split("/");
     if (SUPPORTED_LOCALES.some((l) => l.code === segments[1])) {

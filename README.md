@@ -18,16 +18,20 @@ A monorepo for the Crowdsourced Meal Map project, which helps communities find, 
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js (v18+ recommended)
 - pnpm (preferred), yarn, or npm
 
 ### Install dependencies
+
 ```sh
 pnpm install
 ```
 
 ### Development
+
 To start both frontend and backend in development mode:
+
 ```sh
 # In separate terminals:
 cd apps/web && pnpm dev
@@ -35,11 +39,13 @@ cd apps/api && pnpm dev
 ```
 
 ### Build all packages
+
 ```sh
 pnpm build
 ```
 
 ## Tech Stack
+
 - Next.js (React 19)
 - Express
 - Supabase
@@ -48,6 +54,7 @@ pnpm build
 - Turbo monorepo
 
 ## Apps & Packages
+
 - [Web App](./apps/web/README.md)
 - [API](./apps/api/README.md)
 - [Database](./packages/database/README.md)
@@ -57,6 +64,7 @@ pnpm build
 - [ESLint Config](./packages/eslint-config/README.md)
 
 ## Contributing
+
 Pull requests and issues are welcome!
 
 ---

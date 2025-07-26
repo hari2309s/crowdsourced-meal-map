@@ -1,4 +1,4 @@
-import { TranslationMessages, Locale } from "./types.js";
+import type { TranslationMessages, Locale } from "./types.js";
 
 let messages: TranslationMessages = {};
 
@@ -41,7 +41,6 @@ export async function loadMessages(
   }
 }
 
-// Placeholder for a React hook
 export function useTranslation() {
   return { t };
 }

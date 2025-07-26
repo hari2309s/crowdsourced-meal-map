@@ -1,6 +1,15 @@
 "use client";
 
-import { X, MapPin, Phone, Mail, Globe, Clock } from "lucide-react";
+import {
+  X,
+  MapPin,
+  Phone,
+  Mail,
+  Globe,
+  Clock,
+  CopyIcon,
+  MapIcon,
+} from "lucide-react";
 import type { FoodCenter } from "@crowdsourced-meal-map/shared";
 
 interface LocationPopupProps {
@@ -37,7 +46,6 @@ const LocationPopup = ({
 
   return (
     <div className="bg-stone-50 rounded-lg shadow-lg border border-stone-200 max-w-sm w-full z-50">
-      {/* Header */}
       <div className="flex items-center justify-between p-3 border-b border-stone-200">
         <div className="flex items-center space-x-2">
           <MapPin className="h-5 w-5 text-stone-500" />
@@ -51,9 +59,7 @@ const LocationPopup = ({
         </button>
       </div>
 
-      {/* Content */}
       <div className="p-4 space-y-3">
-        {/* Address */}
         <div>
           <p className="text-sm text-stone-600 font-medium">{address}</p>
           {city &&
@@ -65,7 +71,6 @@ const LocationPopup = ({
           <p className="text-sm text-stone-600">{country}</p>
         </div>
 
-        {/* Food Center specific info */}
         {foodCenter && (
           <div className="space-y-2">
             {foodCenter.description && (
@@ -89,7 +94,6 @@ const LocationPopup = ({
               </span>
             </div>
 
-            {/* Contact Info */}
             <div className="space-y-1">
               {foodCenter.phone && (
                 <div className="flex items-center space-x-2 text-sm text-stone-600">
@@ -118,7 +122,6 @@ const LocationPopup = ({
               )}
             </div>
 
-            {/* Operating Hours */}
             {foodCenter.operating_hours && (
               <div className="flex items-start space-x-2 text-sm text-stone-600">
                 <Clock className="h-4 w-4 mt-0.5" />
@@ -137,18 +140,19 @@ const LocationPopup = ({
           </div>
         )}
 
-        {/* Actions */}
         <div className="flex space-x-2 pt-2 border-t border-stone-200">
           <button
             onClick={openInMaps}
-            className="flex-1 bg-stone-500 text-white px-3 py-2 rounded-md text-sm hover:bg-stone-600 transition-colors cursor-pointer"
+            className="flex items-center gap-2 flex-1 bg-stone-500 text-white px-3 py-2 rounded-md text-sm hover:bg-stone-800 transition-colors cursor-pointer"
           >
+            <MapIcon className="h-4 w-4" />
             Open in Maps
           </button>
           <button
             onClick={copyCoordinates}
-            className="px-3 py-2 border border-stone-300 rounded-md text-sm hover:bg-stone-50 transition-colors cursor-pointer"
+            className="flex items-center gap-2 px-3 py-2 border border-dashed border-stone-400 rounded-md text-sm bg-stone-50 hover:bg-stone-200 transition-colors cursor-pointer"
           >
+            <CopyIcon className="h-4 w-4" />
             Copy Coords
           </button>
         </div>

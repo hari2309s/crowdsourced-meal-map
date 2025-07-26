@@ -2,14 +2,16 @@
 
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { Navigation } from "lucide-react";
-import { DEFAULT_MAP_CENTER } from "@crowdsourced-meal-map/shared";
+import {
+  DEFAULT_MAP_CENTER,
+  type FoodCenter,
+} from "@crowdsourced-meal-map/shared";
 import { useLocation, type UserLocation } from "@/hooks/useLocation";
 import { useMapLibre } from "@/hooks/useMapLibre";
 import { useMapMarkers } from "@/hooks/useMapMarkers";
 import { useMapPopup } from "@/hooks/useMapPopup";
 import MapContainer from "@/components/MapContainer";
 
-// Constants
 const MAP_CONFIG = {
   ZOOM: 15,
   FLY_DURATION: 1000,
@@ -17,10 +19,8 @@ const MAP_CONFIG = {
   MIN_WIDTH: 400,
 } as const;
 
-// Helper to ensure we always get { lat, lng } from a center
 function getLatLng(center: any) {
   if (typeof center.location === "string") {
-    // fallback: use center.lat and center.lng if present
     return { lat: center.lat, lng: center.lng };
   }
   return center.location;
@@ -31,20 +31,17 @@ const Map = ({
   selectedCenter,
   onSelectCenter,
 }: {
-  foodCenters: any[];
-  selectedCenter: any | null;
-  onSelectCenter: (center: any | null) => void;
+  foodCenters: FoodCenter[];
+  selectedCenter: FoodCenter | null;
+  onSelectCenter: (center: FoodCenter | null) => void;
 }) => {
-  // Location hook
   const { location: userLocation, address: userAddress } = useLocation();
 
-  // Memoized values
   const initialCenter = useMemo(
-    () => userLocation || DEFAULT_MAP_CENTER,
+    () => userLocation ?? DEFAULT_MAP_CENTER,
     [userLocation],
   );
 
-  // Use custom map hook
   const { mapContainer, map, mapLoaded, mapError, minHeight, minWidth } =
     useMapLibre(
       initialCenter,
@@ -53,13 +50,18 @@ const Map = ({
       MAP_CONFIG.MIN_WIDTH,
     );
 
-  // State
   const [popupInfo, setPopupInfo] = useState<{
     type: "user" | "foodCenter";
-    data: any;
+    data:
+      | FoodCenter
+      | {
+          location: { lat: number; lng: number };
+          address: string;
+          city: string;
+          country: string;
+        };
   } | null>(null);
 
-  // Marker management
   useMapMarkers({
     map,
     mapLoaded,
@@ -71,33 +73,33 @@ const Map = ({
     setPopupInfo,
   });
 
-  // Popup management
   const { popupContent, popupPosition } = useMapPopup({
     map,
     popupInfo,
     setPopupInfo,
   });
 
-  // Map fly to function
-  const flyToLocation = useCallback((location: UserLocation) => {
-    if (
-      map.current &&
-      typeof location.lat === "number" &&
-      typeof location.lng === "number" &&
-      !isNaN(location.lat) &&
-      !isNaN(location.lng)
-    ) {
-      map.current.flyTo({
-        center: [location.lng, location.lat],
-        zoom: MAP_CONFIG.ZOOM,
-        duration: MAP_CONFIG.FLY_DURATION,
-      });
-    } else {
-      console.warn("Invalid location for flyTo:", location);
-    }
-  }, []);
+  const flyToLocation = useCallback(
+    (location: UserLocation) => {
+      if (
+        map.current &&
+        typeof location.lat === "number" &&
+        typeof location.lng === "number" &&
+        !isNaN(location.lat) &&
+        !isNaN(location.lng)
+      ) {
+        map.current.flyTo({
+          center: [location.lng, location.lat],
+          zoom: MAP_CONFIG.ZOOM,
+          duration: MAP_CONFIG.FLY_DURATION,
+        });
+      } else {
+        console.warn("Invalid location for flyTo:", location);
+      }
+    },
+    [map],
+  );
 
-  // Update popup position when selectedCenter changes
   useEffect(() => {
     if (selectedCenter && map.current) {
       const loc = getLatLng(selectedCenter);
@@ -106,36 +108,15 @@ const Map = ({
         type: "foodCenter",
         data: selectedCenter,
       });
-      // Project marker's coordinates to screen position
-      // const point = map.current.project([loc.lng, loc.lat]); // Removed unused variable
-    } else {
-      // setPopupPosition(null); // This line is removed as per the edit hint
     }
-  }, [selectedCenter, flyToLocation]);
+  }, [selectedCenter, flyToLocation, map]);
 
-  // Update popup position on map move/resize
-  useEffect(() => {
-    if (!selectedCenter || !map.current) return;
-    const updatePosition = () => {
-      // const point = map.current!.project([loc.lng, loc.lat]); // This line is removed as per the edit hint
-    };
-    map.current.on("move", updatePosition);
-    map.current.on("resize", updatePosition);
-    updatePosition();
-    return () => {
-      map.current?.off("move", updatePosition);
-      map.current?.off("resize", updatePosition);
-    };
-  }, [selectedCenter]);
-
-  // Event handlers
   const navigateToUserLocation = useCallback(() => {
     if (userLocation) {
       flyToLocation(userLocation);
     }
   }, [userLocation, flyToLocation]);
 
-  // Error state
   if (mapError) {
     return (
       <div
@@ -161,7 +142,6 @@ const Map = ({
       mapError={mapError}
       minHeight={minHeight}
     >
-      {/* Map container */}
       <div
         ref={mapContainer}
         style={{
@@ -179,7 +159,6 @@ const Map = ({
           padding: "5px",
         }}
       />
-      {/* Popup (pure React, absolutely positioned) */}
       {popupContent && popupPosition && (
         <div
           style={{
@@ -194,7 +173,6 @@ const Map = ({
           {popupContent}
         </div>
       )}
-      {/* Navigation Controls */}
       <div className="absolute top-4 right-4 space-y-2 z-50">
         {userLocation && (
           <button

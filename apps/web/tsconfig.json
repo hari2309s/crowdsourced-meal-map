@@ -13,7 +13,9 @@
       "@crowdsourced-meal-map/ui/*": ["../../packages/ui/src/*"],
       "@crowdsourced-meal-map/shared": ["../../packages/shared/src/index.ts"],
       "@crowdsourced-meal-map/shared/*": ["../../packages/shared/src/*"],
-      "@crowdsourced-meal-map/database": ["../../packages/database/src/index.ts"],
+      "@crowdsourced-meal-map/database": [
+        "../../packages/database/src/index.ts"
+      ],
       "@crowdsourced-meal-map/database/*": ["../../packages/database/src/*"]
     }
   },
@@ -23,6 +25,9 @@
     "**/*.tsx",
     "next.config.js",
     ".next/types/**/*.ts",
+    "components/**/*",
+    "app/**/*",
+    "hooks/**/*",
     "../../packages/database/src/**/*",
     "../../packages/shared/src/**/*"
   ]

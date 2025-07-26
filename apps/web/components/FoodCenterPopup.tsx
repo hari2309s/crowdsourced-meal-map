@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Clock, Phone, Globe, Star, AlertCircle, X } from "lucide-react";
 import {
@@ -8,6 +8,7 @@ import {
   formatOperatingHours,
   getStatusColor,
   DIETARY_RESTRICTIONS,
+  getFoodCenterTypeColorClasses,
   type FoodCenter,
   type Review,
   type AvailabilityStatus,
@@ -22,7 +23,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-interface FoodCenterPopupProps {
+interface AddFoodCenterPopupProps {
   center: FoodCenter;
   onClose: () => void;
 }
@@ -40,8 +41,8 @@ const availabilitySchema = z.object({
 type ReviewForm = z.infer<typeof reviewSchema>;
 type AvailabilityForm = z.infer<typeof availabilitySchema>;
 
-const FoodCenterPopup = ({ center, onClose }: FoodCenterPopupProps) => {
-  const t = useTranslations("FoodCenterPopup");
+const AddFoodCenterPopup = ({ center, onClose }: AddFoodCenterPopupProps) => {
+  const t = useTranslations("AddFoodCenterPopup");
   const { supabase } = useSupabase();
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   const [isSubmittingAvailability, setIsSubmittingAvailability] =
@@ -131,6 +132,25 @@ const FoodCenterPopup = ({ center, onClose }: FoodCenterPopupProps) => {
         </button>
       </div>
 
+      <div className="mt-2 flex items-center space-x-2">
+        {(() => {
+          const { bg, text } = getFoodCenterTypeColorClasses(center.type);
+          return (
+            <span
+              className={cn(
+                "px-2 py-1 text-xs font-semibold rounded-full",
+                bg,
+                text,
+              )}
+            >
+              {center.type
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, (l) => l.toUpperCase())}
+            </span>
+          );
+        })()}
+      </div>
+
       <div className="mt-2 space-y-2 text-xs text-gray-600">
         <p>
           {center.address}, {center.city}
@@ -171,17 +191,24 @@ const FoodCenterPopup = ({ center, onClose }: FoodCenterPopupProps) => {
         {center.dietary_restrictions &&
           center.dietary_restrictions.length > 0 && (
             <div className="flex flex-wrap gap-1">
-              {center.dietary_restrictions.map((restriction) => (
-                <span
-                  key={restriction}
-                  className="px-2 py-1 bg-gray-100 text-xs rounded-full"
-                >
-                  {
-                    DIETARY_RESTRICTIONS.find((r) => r.value === restriction)
-                      ?.label
-                  }
-                </span>
-              ))}
+              {center.dietary_restrictions.map((restriction) => {
+                const { bg, text } = getFoodCenterTypeColorClasses(center.type);
+                return (
+                  <span
+                    key={restriction}
+                    className={cn(
+                      "px-2 py-1 text-xs font-medium rounded-full",
+                      bg,
+                      text,
+                    )}
+                  >
+                    {
+                      DIETARY_RESTRICTIONS.find((r) => r.value === restriction)
+                        ?.label
+                    }
+                  </span>
+                );
+              })}
             </div>
           )}
       </div>
@@ -279,4 +306,4 @@ const FoodCenterPopup = ({ center, onClose }: FoodCenterPopupProps) => {
   );
 };
 
-export default FoodCenterPopup;
+export default AddFoodCenterPopup;

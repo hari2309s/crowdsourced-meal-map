@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   Search,
@@ -21,8 +21,8 @@ import {
   getStatusColor,
   FOOD_CENTER_TYPES,
   DIETARY_RESTRICTIONS,
+  type FoodCenter,
 } from "@crowdsourced-meal-map/shared";
-import type { FoodCenter } from "@crowdsourced-meal-map/shared";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface SidebarProps {
@@ -59,7 +59,7 @@ const Sidebar = ({
   loading,
 }: SidebarProps) => {
   const t = useTranslations("Sidebar");
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
   const { register, handleSubmit, watch } = useForm<FilterForm>({
     resolver: zodResolver(filterSchema),
     defaultValues: {
@@ -99,7 +99,6 @@ const Sidebar = ({
 
           <button
             type="button"
-            disabled
             onClick={() => setIsFilterOpen(!isFilterOpen)}
             className="btn btn-secondary btn-sm w-full flex items-center justify-between disabled:cursor-not-allowed"
           >
@@ -203,7 +202,7 @@ const Sidebar = ({
                       </h3>
                       <span
                         className={cn(
-                          "px-2 py-1 text-xs font-medium rounded-full",
+                          `px-2 py-1 text-xs rounded-lg text-[${getStatusColor(center.current_availability)}]`,
                           getStatusColor(center.current_availability),
                         )}
                       >

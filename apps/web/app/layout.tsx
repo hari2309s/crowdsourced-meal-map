@@ -13,10 +13,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>Crowdsourced MealMap</title>
+        <title>Crowdsourced Meal Map</title>
       </head>
-      <body className={inter.className}>
-        <Providers>{children}</Providers>
+      <body className={`${inter.className} relative overflow-x-hidden`}>
+        <div className="dotted-background"></div>
+        <Providers>
+          <div className="relative z-10">{children}</div>
+        </Providers>
       </body>
     </html>
   );

@@ -1,6 +1,10 @@
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
-import type { FoodCenter } from "@crowdsourced-meal-map/shared";
+import {
+  AVAILABILITY_STATUSES,
+  type FoodCenter,
+} from "@crowdsourced-meal-map/shared";
+import { type UserAddress } from "@/hooks/useLocation";
 
 interface LatLng {
   lat: number;
@@ -21,23 +25,36 @@ export function useMapMarkers({
   mapLoaded: boolean;
   foodCenters: FoodCenter[];
   userLocation: LatLng | null | undefined;
-  userAddress: any;
+  userAddress: UserAddress | null;
   selectedCenter: FoodCenter | null;
   onSelectCenter: (center: FoodCenter | null) => void;
-  setPopupInfo: (info: any) => void;
+  setPopupInfo: (
+    info: {
+      type: "user" | "foodCenter";
+      data:
+        | FoodCenter
+        | {
+            location: LatLng;
+            address: string;
+            city: string;
+            country: string;
+          };
+    } | null,
+  ) => void;
 }) {
   const markersRef = useRef<maplibregl.Marker[]>([]);
   const userMarkerRef = useRef<maplibregl.Marker | null>(null);
 
-  // Helper to ensure we always get { lat, lng } from a center
-  function getLatLng(center: any) {
+  function getLatLng(center: FoodCenter) {
     if (typeof center.location === "string") {
-      return { lat: center.lat, lng: center.lng };
+      return {
+        lat: (center as unknown as { lat: number; lng: number }).lat,
+        lng: (center as unknown as { lat: number; lng: number }).lng,
+      };
     }
     return center.location;
   }
 
-  // Food center markers
   useEffect(() => {
     if (!map.current || !mapLoaded) return;
     markersRef.current.forEach((marker) => marker.remove());
@@ -50,21 +67,87 @@ export function useMapMarkers({
         !isNaN(loc.lat) &&
         !isNaN(loc.lng)
       ) {
+        // Create marker container for wave effect
+        const markerContainer = document.createElement("div");
+        markerContainer.className = "relative cursor-pointer";
+        markerContainer.style.width = "16px";
+        markerContainer.style.height = "16px";
+
         const el = document.createElement("div");
-        el.className = `w-6 h-6 rounded-full border-2 border-white shadow-lg flex items-center justify-center transition-transform ${
-          selectedCenter?.id === center.id ? "animate-pulse" : ""
-        }`;
-        el.style.backgroundColor = "#f5f5f4";
-        el.style.cursor = "pointer";
-        el.innerHTML = `<svg class='w-3 h-3 text-white' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z'/><circle cx='12' cy='9' r='2.5' fill='currentColor'/></svg>`;
-        el.onclick = () => {
+        const availabilityColor = AVAILABILITY_STATUSES.find(
+          (status) => status.value === center.current_availability,
+        );
+        const shouldPulse =
+          center.current_availability === "available" ||
+          center.current_availability === "limited";
+
+        el.className =
+          "w-4 h-4 rounded-full border-2 border-white shadow-lg transition-transform relative z-10";
+
+        // Use availability status color as background
+        const bgColor =
+          availabilityColor?.color === "green"
+            ? "#22c55e"
+            : availabilityColor?.color === "yellow"
+              ? "#eab308"
+              : availabilityColor?.color === "red"
+                ? "#ef4444"
+                : "#6b7280";
+
+        el.style.backgroundColor = bgColor;
+        el.style.opacity = "1";
+
+        // Add pulsating wave effect for available/limited centers
+        if (shouldPulse) {
+          for (let i = 0; i < 3; i++) {
+            const wave = document.createElement("div");
+            wave.className = "absolute rounded-full border-2";
+            wave.style.top = "0";
+            wave.style.left = "0";
+            wave.style.width = "16px";
+            wave.style.height = "16px";
+            wave.style.borderColor = bgColor;
+            wave.style.opacity = "0.4";
+            wave.style.animation = `pulse-wave 2s cubic-bezier(0.4, 0, 0.6, 1) infinite ${i * 0.3}s`;
+            wave.style.pointerEvents = "none";
+            markerContainer.appendChild(wave);
+          }
+        }
+
+        markerContainer.appendChild(el);
+
+        // Add CSS animation styles to document head if not already added
+        if (!document.getElementById("pulse-wave-styles")) {
+          const style = document.createElement("style");
+          style.id = "pulse-wave-styles";
+          style.textContent = `
+            @keyframes pulse-wave {
+              0% {
+                transform: scale(1);
+                opacity: 0.4;
+              }
+              50% {
+                transform: scale(2.5);
+                opacity: 0.1;
+              }
+              100% {
+                transform: scale(3);
+                opacity: 0;
+              }
+            }
+          `;
+          document.head.appendChild(style);
+        }
+
+        markerContainer.onclick = () => {
           setPopupInfo(null);
           setTimeout(() => {
             setPopupInfo({ type: "foodCenter", data: center });
             onSelectCenter(center);
           }, 0);
         };
-        const marker = new maplibregl.Marker({ element: el })
+
+        const marker = new maplibregl.Marker({ element: markerContainer })
           .setLngLat([loc.lng, loc.lat])
           .addTo(map.current!);
         markersRef.current.push(marker);
@@ -83,13 +166,14 @@ export function useMapMarkers({
     map,
   ]);
 
-  // User location marker
   useEffect(() => {
     if (!map.current || !mapLoaded) return;
+
     if (userMarkerRef.current) {
       userMarkerRef.current.remove();
       userMarkerRef.current = null;
     }
+
     if (
       userLocation &&
       typeof userLocation.lat === "number" &&
@@ -97,28 +181,52 @@ export function useMapMarkers({
       !isNaN(userLocation.lat) &&
       !isNaN(userLocation.lng)
     ) {
+      // Create user marker container for wave effect
+      const userContainer = document.createElement("div");
+      userContainer.className = "relative cursor-pointer";
+      userContainer.style.width = "16px";
+      userContainer.style.height = "16px";
+
       const el = document.createElement("div");
       el.className =
-        "w-4 h-4 bg-stone-950 rounded-full border-2 border-white shadow-lg animate-pulse cursor-pointer transition-transform";
-      el.onclick = () => {
+        "w-4 h-4 bg-stone-950 rounded-full border-2 border-white shadow-lg relative z-10 transition-transform";
+
+      // Add subtle wave effect for user location
+      for (let i = 0; i < 2; i++) {
+        const wave = document.createElement("div");
+        wave.className = "absolute rounded-full border-2";
+        wave.style.top = "0";
+        wave.style.left = "0";
+        wave.style.width = "16px";
+        wave.style.height = "16px";
+        wave.style.borderColor = "#1c1917";
+        wave.style.opacity = "0.2";
+        wave.style.animation = `pulse-wave 3s cubic-bezier(0.4, 0, 0.6, 1) infinite ${i * 0.5}s`;
+        wave.style.pointerEvents = "none";
+        userContainer.appendChild(wave);
+      }
+
+      userContainer.appendChild(el);
+      userContainer.onclick = () => {
         setPopupInfo(null);
         setTimeout(() => {
           setPopupInfo({
             type: "user",
             data: {
               location: userLocation,
-              address: userAddress?.address || "",
-              city: userAddress?.city || "",
-              country: userAddress?.country || "",
+              address: userAddress?.address ?? "",
+              city: userAddress?.city ?? "",
+              country: userAddress?.country ?? "",
             },
           });
           onSelectCenter(null);
         }, 0);
       };
-      userMarkerRef.current = new maplibregl.Marker({ element: el })
+      userMarkerRef.current = new maplibregl.Marker({ element: userContainer })
         .setLngLat([userLocation.lng, userLocation.lat])
         .addTo(map.current!);
     }
+
     return () => {
       if (userMarkerRef.current) {
         userMarkerRef.current.remove();
