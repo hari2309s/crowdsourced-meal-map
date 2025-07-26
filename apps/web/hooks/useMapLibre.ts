@@ -6,11 +6,17 @@ interface LatLng {
   lng: number;
 }
 
+interface Bounds {
+  southwest: LatLng;
+  northeast: LatLng;
+}
+
 export function useMapLibre(
   initialCenter: LatLng,
   zoom = 15,
   minHeight = 600,
   minWidth = 400,
+  bounds?: Bounds,
 ) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<maplibregl.Map | null>(null);
@@ -41,6 +47,19 @@ export function useMapLibre(
         zoom,
       });
       map.current.on("load", () => {
+        // If bounds are provided, fit the map to those bounds on initial load
+        if (bounds && map.current) {
+          map.current.fitBounds(
+            [
+              [bounds.southwest.lng, bounds.southwest.lat],
+              [bounds.northeast.lng, bounds.northeast.lat],
+            ],
+            {
+              padding: 20,
+              duration: 0, // No animation on initial load
+            },
+          );
+        }
         setMapLoaded(true);
         setMapError(null);
       });

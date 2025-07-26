@@ -7,7 +7,7 @@ import { useSupabase } from "@/providers";
 import { useRouter } from "next/navigation";
 
 const AuthButton = () => {
-  const t = useTranslations("Header");
+  const t = useTranslations("header");
   const { supabase } = useSupabase();
   const router = useRouter();
   const [user, setUser] = useState<any>(null);

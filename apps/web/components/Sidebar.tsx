@@ -18,6 +18,9 @@ import * as z from "zod";
 import {
   cn,
   formatOperatingHours,
+  filterSchema,
+  DEFAULT_FILTER_VALUES,
+  type FilterForm,
   getStatusColor,
   FOOD_CENTER_TYPES,
   DIETARY_RESTRICTIONS,
@@ -42,14 +45,6 @@ interface SidebarProps {
   loading: boolean;
 }
 
-const filterSchema = z.object({
-  search: z.string().optional(),
-  type: z.string().optional(),
-  dietary_restrictions: z.array(z.string()).optional(),
-});
-
-type FilterForm = z.infer<typeof filterSchema>;
-
 const Sidebar = ({
   foodCenters,
   selectedCenter,
@@ -58,12 +53,12 @@ const Sidebar = ({
   onFiltersChange,
   loading,
 }: SidebarProps) => {
-  const t = useTranslations("Sidebar");
+  const t = useTranslations("sidebar");
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
   const { register, handleSubmit, watch } = useForm<FilterForm>({
     resolver: zodResolver(filterSchema),
     defaultValues: {
-      search: "",
+      ...DEFAULT_FILTER_VALUES,
       type: filters.type,
       dietary_restrictions: filters.dietary_restrictions,
     },

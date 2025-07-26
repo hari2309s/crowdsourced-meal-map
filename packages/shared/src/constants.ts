@@ -58,6 +58,121 @@ export const LANGUAGES = [
 ] as const;
 
 export const DEFAULT_MAP_CENTER = {
-  lat: 52.4991,
-  lng: 13.4184,
-}; // Kottbusser Tor, Berlin
+  lat: 52.52,
+  lng: 13.405,
+}; // Central Berlin
+
+// Function to calculate bounds around a center point
+export function calculateBoundsAroundLocation(
+  center: { lat: number; lng: number },
+  radiusKm = 5,
+) {
+  // Approximate conversion: 1 degree latitude ≈ 111 km
+  // Longitude varies by latitude, at Berlin's latitude ~71 km per degree
+  const latDelta = radiusKm / 111;
+  const lngDelta = radiusKm / (111 * Math.cos((center.lat * Math.PI) / 180));
+
+  return {
+    southwest: {
+      lat: center.lat - latDelta,
+      lng: center.lng - lngDelta,
+    },
+    northeast: {
+      lat: center.lat + latDelta,
+      lng: center.lng + lngDelta,
+    },
+  };
+}
+
+// Map Configuration
+export const MAP_CONFIG = {
+  ZOOM: 13,
+  FLY_DURATION: 1000,
+  MIN_HEIGHT: 600,
+  MIN_WIDTH: 400,
+} as const;
+
+// Supported locales for internationalization
+export const SUPPORTED_LOCALES = [
+  { code: "en", label: "English", enabled: true },
+  { code: "de", label: "Deutsch", enabled: true },
+  { code: "fr", label: "Français", enabled: false },
+  { code: "es", label: "Español", enabled: false },
+  { code: "ar", label: "العربية", enabled: false },
+  { code: "tr", label: "Türkçe", enabled: false },
+] as const;
+
+// Default form values
+export const DEFAULT_LOCATION_FORM = {
+  name: "",
+  address: "",
+  city: "Berlin",
+  country: "Germany",
+  type: "food_bank" as const,
+  dietary_restrictions: [] as string[],
+  operating_hours: {} as Record<string, { open: string; close: string }>,
+};
+
+export const DEFAULT_FILTER_VALUES = {
+  search: "",
+  type: "",
+  dietary_restrictions: [] as string[],
+};
+
+// Location utilities
+export function getLatLng(center: any) {
+  if (typeof center.location === "string") {
+    return { lat: center.lat, lng: center.lng };
+  }
+  return center.location;
+}
+
+// Address parsing utility for Nominatim API responses
+export function parseAddressFromNominatim(data: any) {
+  if (data.address) {
+    const addr = data.address;
+
+    let address = "Current Location";
+    if (addr.road) {
+      address = addr.house_number
+        ? `${addr.road} ${addr.house_number.toUpperCase()}`
+        : addr.road;
+    } else if (addr.suburb) {
+      address = addr.suburb;
+    }
+
+    let city = "Berlin";
+    let country = "Germany";
+    let postcode = "";
+    let district = "";
+
+    const parts = data.display_name.split(", ");
+    for (const part of parts) {
+      if (part.match(/^\d{5}$/)) {
+        postcode = part;
+      } else if (["Berlin", "Hamburg", "München", "Köln"].includes(part)) {
+        city = part;
+      } else if (part.length > 2 && !postcode && !city) {
+        district = part;
+      }
+    }
+
+    if (addr.country) country = addr.country;
+
+    return {
+      address,
+      city,
+      country,
+      postcode,
+      district,
+    };
+  }
+
+  return {
+    address: "Current Location",
+    city: "Berlin",
+    country: "Germany",
+    postcode: "",
+    district: "",
+  };
+}

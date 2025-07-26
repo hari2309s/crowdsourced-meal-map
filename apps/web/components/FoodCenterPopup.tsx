@@ -19,6 +19,12 @@ import {
   createAvailabilityUpdate,
   type CreateAvailabilityUpdateInput,
 } from "@crowdsourced-meal-map/database";
+import {
+  reviewSchema,
+  availabilitySchema,
+  type ReviewForm,
+  type AvailabilityForm,
+} from "@crowdsourced-meal-map/shared";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -28,21 +34,8 @@ interface AddFoodCenterPopupProps {
   onClose: () => void;
 }
 
-const reviewSchema = z.object({
-  rating: z.number().min(1).max(5),
-  comment: z.string().optional(),
-});
-
-const availabilitySchema = z.object({
-  status: z.enum(["available", "limited", "unavailable", "unknown"]),
-  notes: z.string().optional(),
-});
-
-type ReviewForm = z.infer<typeof reviewSchema>;
-type AvailabilityForm = z.infer<typeof availabilitySchema>;
-
 const AddFoodCenterPopup = ({ center, onClose }: AddFoodCenterPopupProps) => {
-  const t = useTranslations("AddFoodCenterPopup");
+  const t = useTranslations("addFoodCenterPopup");
   const { supabase } = useSupabase();
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   const [isSubmittingAvailability, setIsSubmittingAvailability] =

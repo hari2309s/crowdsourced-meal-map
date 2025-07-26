@@ -1,12 +1,12 @@
 {
-  "Header": {
+  "header": {
     "title": "Essenskarte",
     "subtitle": "Finden Sie Lebensmittelunterstützung in Ihrer Nähe",
     "addLocation": "Standort hinzufügen",
     "signIn": "Anmelden",
     "signOut": "Abmelden"
   },
-  "Sidebar": {
+  "sidebar": {
     "searchPlaceholder": "Lebensmittelzentren suchen...",
     "filters": "Filter",
     "type": "Typ",
@@ -16,7 +16,7 @@
     "loading": "Laden...",
     "noResults": "Keine Lebensmittelzentren gefunden"
   },
-  "AddFoodCenterPopup": {
+  "addFoodCenterPopup": {
     "submitReview": "Bewertung abgeben",
     "reportAvailability": "Verfügbarkeit melden",
     "rating": "Bewertung",
@@ -25,7 +25,7 @@
     "notes": "Notizen",
     "submit": "Absenden"
   },
-  "AddLocationModal": {
+  "addLocationModal": {
     "title": "Neues Lebensmittelzentrum hinzufügen",
     "name": "Name",
     "address": "Adresse",
@@ -39,5 +39,30 @@
     "operatingHours": "Öffnungszeiten",
     "cancel": "Abbrechen",
     "submit": "Absenden"
+  },
+  "legend": {
+    "mapLegend": "Kartenlegende",
+    "foodCenterTypes": "Lebensmittelzentrum-Typen",
+    "dietaryRestrictions": "Ernährungsoptionen",
+    "availabilityStatus": "Verfügbarkeit",
+    "other": "Sonstiges",
+    "yourLocation": "Ihr Standort",
+    "available": "Verfügbar",
+    "limited": "Begrenzt",
+    "unavailable": "Nicht verfügbar",
+    "unknown": "Unbekannt"
+  },
+  "colorCard": {
+    "colorGuide": "Farblegende",
+    "quickReference": "Schnellreferenz",
+    "centers": "Zentren",
+    "dietary": "Ernährung",
+    "foodCenterTypes": "Lebensmittelzentrum-Typen",
+    "dietaryOptions": "Ernährungsoptionen",
+    "availabilityStatus": "Verfügbarkeitsstatus",
+    "usageTips": "Nutzungstipps",
+    "tip1": "Große Kreise zeigen Lebensmittelzentrum-Typen",
+    "tip2": "Kleine Punkte zeigen verfügbare Ernährungsoptionen",
+    "tip3": "Mehrere Punkte bedeuten mehrere Ernährungsoptionen"
   }
 }

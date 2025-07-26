@@ -20,7 +20,7 @@ const ColorCard: React.FC<ColorCardProps> = ({
   className,
   compact = false,
 }) => {
-  const t = useTranslations("ColorCard");
+  const t = useTranslations("colorCard");
 
   if (compact) {
     return (

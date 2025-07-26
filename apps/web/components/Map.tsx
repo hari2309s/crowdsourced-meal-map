@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState, useMemo, useCallback } from "react";
-import { Navigation } from "lucide-react";
+import { Navigation, Plus, Minus } from "lucide-react";
 import {
   DEFAULT_MAP_CENTER,
+  calculateBoundsAroundLocation,
+  MAP_CONFIG,
+  getLatLng,
   type FoodCenter,
 } from "@crowdsourced-meal-map/shared";
 import { useLocation, type UserLocation } from "@/hooks/useLocation";
@@ -11,20 +14,6 @@ import { useMapLibre } from "@/hooks/useMapLibre";
 import { useMapMarkers } from "@/hooks/useMapMarkers";
 import { useMapPopup } from "@/hooks/useMapPopup";
 import MapContainer from "@/components/MapContainer";
-
-const MAP_CONFIG = {
-  ZOOM: 15,
-  FLY_DURATION: 1000,
-  MIN_HEIGHT: 600,
-  MIN_WIDTH: 400,
-} as const;
-
-function getLatLng(center: any) {
-  if (typeof center.location === "string") {
-    return { lat: center.lat, lng: center.lng };
-  }
-  return center.location;
-}
 
 const Map = ({
   foodCenters,
@@ -42,12 +31,18 @@ const Map = ({
     [userLocation],
   );
 
+  const dynamicBounds = useMemo(
+    () => calculateBoundsAroundLocation(initialCenter, 5),
+    [initialCenter],
+  );
+
   const { mapContainer, map, mapLoaded, mapError, minHeight, minWidth } =
     useMapLibre(
       initialCenter,
       MAP_CONFIG.ZOOM,
       MAP_CONFIG.MIN_HEIGHT,
       MAP_CONFIG.MIN_WIDTH,
+      dynamicBounds,
     );
 
   const [popupInfo, setPopupInfo] = useState<{
@@ -117,6 +112,20 @@ const Map = ({
     }
   }, [userLocation, flyToLocation]);
 
+  const zoomIn = useCallback(() => {
+    if (map.current) {
+      const currentZoom = map.current.getZoom();
+      map.current.setZoom(currentZoom + 1);
+    }
+  }, [map]);
+
+  const zoomOut = useCallback(() => {
+    if (map.current) {
+      const currentZoom = map.current.getZoom();
+      map.current.setZoom(currentZoom - 1);
+    }
+  }, [map]);
+
   if (mapError) {
     return (
       <div
@@ -183,6 +192,22 @@ const Map = ({
             <Navigation className="h-4 w-4" />
           </button>
         )}
+      </div>
+      <div className="absolute bottom-4 left-4 flex flex-col space-y-1 z-50">
+        <button
+          onClick={zoomIn}
+          className="bg-white border border-dashed border-stone-300 hover:bg-stone-50 w-8 h-8 flex items-center justify-center rounded-md shadow-sm transition-colors cursor-pointer"
+          aria-label="Zoom in"
+        >
+          <Plus className="h-4 w-4 text-stone-700" />
+        </button>
+        <button
+          onClick={zoomOut}
+          className="bg-white border border-dashed border-stone-300 hover:bg-stone-50 w-8 h-8 flex items-center justify-center rounded-md shadow-sm transition-colors cursor-pointer"
+          aria-label="Zoom out"
+        >
+          <Minus className="h-4 w-4 text-stone-700" />
+        </button>
       </div>
     </MapContainer>
   );

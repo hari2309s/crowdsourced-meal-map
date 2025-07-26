@@ -32,8 +32,9 @@ export function formatOperatingHours(
 }
 
 export function getStatusColor(status: string): string {
-  return (AVAILABILITY_STATUS_COLORS[status] ??
-    AVAILABILITY_STATUS_COLORS["unknown"]) as string;
+  return (
+    AVAILABILITY_STATUS_COLORS[status] ?? AVAILABILITY_STATUS_COLORS["unknown"]!
+  );
 }
 
 export function removeUndefined<T extends object>(obj: T): T {
@@ -103,4 +104,70 @@ export function getDietaryRestrictionColorClasses(restriction: string): {
  */
 export function getDietaryRestrictionColor(restriction: string): string {
   return DIETARY_RESTRICTION_COLORS[restriction] ?? "#6b7280"; // gray-500 fallback
+}
+
+/**
+ * Handles locale change in URL by replacing the current locale segment
+ * @param newLocale The new locale to switch to
+ * @param currentPath The current window path
+ * @param supportedLocales Array of supported locale objects
+ * @returns The new path with updated locale
+ */
+export function handleLocaleChange(
+  newLocale: string,
+  currentPath: string,
+  supportedLocales: readonly {
+    code: string;
+    label: string;
+    enabled: boolean;
+  }[],
+): string {
+  const segments = currentPath.split("/");
+  if (supportedLocales.some((l) => l.code === segments[1])) {
+    segments[1] = newLocale;
+  } else {
+    segments.splice(1, 0, newLocale);
+  }
+  return segments.join("/");
+}
+
+/**
+ * Opens a location in the default maps application
+ * @param lat Latitude coordinate
+ * @param lng Longitude coordinate
+ */
+export function openLocationInMaps(lat: number, lng: number): void {
+  const url = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=15`;
+  window.open(url, "_blank");
+}
+
+/**
+ * Copies coordinates to clipboard in a formatted string
+ * @param lat Latitude coordinate
+ * @param lng Longitude coordinate
+ * @returns Promise that resolves when copying is complete
+ */
+export function copyCoordinatesToClipboard(
+  lat: number,
+  lng: number,
+): Promise<void> {
+  const coords = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  return navigator.clipboard.writeText(coords);
+}
+
+/**
+ * Validates if a given locale is supported
+ * @param locale The locale string to validate
+ * @param supportedLocales Array of supported locale objects
+ * @returns boolean indicating if locale is supported
+ */
+export function isLocaleSupported(
+  locale: string,
+  supportedLocales: readonly {
+    code: string;
+    label: string;
+    enabled: boolean;
+  }[],
+): boolean {
+  return supportedLocales.some((l) => l.code === locale && l.enabled);
 }

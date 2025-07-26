@@ -1,12 +1,12 @@
 {
-  "Header": {
+  "header": {
     "title": "Meal Map",
     "subtitle": "Find food support near you",
     "addLocation": "Add Location",
     "signIn": "Sign In",
     "signOut": "Sign Out"
   },
-  "Sidebar": {
+  "sidebar": {
     "searchPlaceholder": "Search food centers...",
     "filters": "Filters",
     "type": "Type",
@@ -16,7 +16,7 @@
     "loading": "Loading...",
     "noResults": "No food centers found"
   },
-  "AddFoodCenterPopup": {
+  "addFoodCenterPopup": {
     "submitReview": "Submit Review",
     "reportAvailability": "Report Availability",
     "rating": "Rating",
@@ -25,7 +25,7 @@
     "notes": "Notes",
     "submit": "Submit"
   },
-  "AddLocationModal": {
+  "addLocationModal": {
     "title": "Add New Food Center",
     "name": "Name",
     "address": "Address",
@@ -39,5 +39,30 @@
     "operatingHours": "Operating Hours",
     "cancel": "Cancel",
     "submit": "Submit"
+  },
+  "legend": {
+    "mapLegend": "Map Legend",
+    "foodCenterTypes": "Food Center Types",
+    "dietaryRestrictions": "Dietary Options",
+    "availabilityStatus": "Availability",
+    "other": "Other",
+    "yourLocation": "Your Location",
+    "available": "Available",
+    "limited": "Limited",
+    "unavailable": "Unavailable",
+    "unknown": "Unknown"
+  },
+  "colorCard": {
+    "colorGuide": "Color Guide",
+    "quickReference": "Quick Reference",
+    "centers": "Centers",
+    "dietary": "Dietary",
+    "foodCenterTypes": "Food Center Types",
+    "dietaryOptions": "Dietary Options",
+    "availabilityStatus": "Availability Status",
+    "usageTips": "Usage Tips",
+    "tip1": "Large circles show food center types",
+    "tip2": "Small dots indicate dietary options available",
+    "tip3": "Multiple dots mean multiple dietary options"
   }
 }

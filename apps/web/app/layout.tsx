@@ -16,7 +16,6 @@ export default function RootLayout({
         <title>Crowdsourced Meal Map</title>
       </head>
       <body className={`${inter.className} relative overflow-x-hidden`}>
-        <div className="dotted-background"></div>
         <Providers>
           <div className="relative z-10">{children}</div>
         </Providers>

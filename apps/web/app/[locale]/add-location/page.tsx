@@ -12,56 +12,13 @@ import { useSupabase } from "@/providers";
 import {
   FOOD_CENTER_TYPES,
   DIETARY_RESTRICTIONS,
+  locationSchema,
+  DEFAULT_LOCATION_FORM,
+  type LocationForm,
 } from "@crowdsourced-meal-map/shared";
 
-const locationSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  address: z.string().min(1, "Address is required"),
-  city: z.string().default("Berlin"),
-  country: z.string().default("Germany"),
-  postal_code: z.string().optional(),
-  phone: z.string().optional(),
-  email: z.string().email().optional(),
-  website: z.string().url().optional(),
-  type: z.enum([
-    "food_bank",
-    "community_kitchen",
-    "soup_kitchen",
-    "mobile_unit",
-    "pantry",
-  ]),
-  dietary_restrictions: z
-    .array(
-      z.enum([
-        "vegetarian",
-        "vegan",
-        "halal",
-        "kosher",
-        "gluten_free",
-        "dairy_free",
-        "nut_free",
-      ]),
-    )
-    .optional(),
-  lat: z.number().min(-90).max(90).optional(),
-  lng: z.number().min(-180).max(180).optional(),
-  operating_hours: z
-    .object({
-      mon: z.object({ open: z.string(), close: z.string() }).optional(),
-      tue: z.object({ open: z.string(), close: z.string() }).optional(),
-      wed: z.object({ open: z.string(), close: z.string() }).optional(),
-      thu: z.object({ open: z.string(), close: z.string() }).optional(),
-      fri: z.object({ open: z.string(), close: z.string() }).optional(),
-      sat: z.object({ open: z.string(), close: z.string() }).optional(),
-      sun: z.object({ open: z.string(), close: z.string() }).optional(),
-    })
-    .optional(),
-});
-
-type LocationForm = z.infer<typeof locationSchema>;
-
 export default function AddLocationPage() {
-  const t = useTranslations("AddLocationModal");
+  const t = useTranslations("addLocationModal");
   const { supabase } = useSupabase();
   const router = useRouter();
   const locale = useLocale();
@@ -73,15 +30,7 @@ export default function AddLocationPage() {
     formState: { errors },
   } = useForm<LocationForm>({
     resolver: zodResolver(locationSchema) as any,
-    defaultValues: {
-      name: "",
-      address: "",
-      city: "Berlin",
-      country: "Germany",
-      type: "food_bank",
-      dietary_restrictions: [],
-      operating_hours: {},
-    },
+    defaultValues: DEFAULT_LOCATION_FORM,
   });
 
   const onSubmit = async (data: LocationForm) => {

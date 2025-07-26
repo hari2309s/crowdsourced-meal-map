@@ -11,6 +11,11 @@ import {
   MapIcon,
 } from "lucide-react";
 import type { FoodCenter } from "@crowdsourced-meal-map/shared";
+import {
+  getFoodCenterTypeColorClasses,
+  openLocationInMaps,
+  copyCoordinatesToClipboard,
+} from "@crowdsourced-meal-map/shared";
 
 interface LocationPopupProps {
   title: string;
@@ -34,14 +39,16 @@ const LocationPopup = ({
   onClose,
   foodCenter,
 }: LocationPopupProps) => {
+  const typeColors = foodCenter
+    ? getFoodCenterTypeColorClasses(foodCenter.type)
+    : { bg: "bg-stone-200", text: "text-stone-800" };
+
   const openInMaps = () => {
-    const url = `https://www.openstreetmap.org/?mlat=${coordinates.lat}&mlon=${coordinates.lng}&zoom=15`;
-    window.open(url, "_blank");
+    openLocationInMaps(coordinates.lat, coordinates.lng);
   };
 
   const copyCoordinates = () => {
-    const coords = `${coordinates.lat}, ${coordinates.lng}`;
-    navigator.clipboard.writeText(coords);
+    copyCoordinatesToClipboard(coordinates.lat, coordinates.lng);
   };
 
   return (
@@ -78,11 +85,13 @@ const LocationPopup = ({
             )}
 
             <div className="flex items-center space-x-2 text-sm text-stone-600">
-              <span className="px-2 py-1 bg-stone-100 text-stone-800 rounded-full text-xs">
+              <span
+                className={`px-2 py-1 rounded-lg text-xs ${typeColors.bg} ${typeColors.text}`}
+              >
                 {foodCenter.type.replace("_", " ")}
               </span>
               <span
-                className={`px-2 py-1 rounded-full text-xs ${
+                className={`px-2 py-1 rounded-lg text-xs ${
                   foodCenter.current_availability === "available"
                     ? "bg-green-100 text-green-800"
                     : foodCenter.current_availability === "limited"

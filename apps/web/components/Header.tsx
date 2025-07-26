@@ -7,34 +7,24 @@ import Image from "next/image";
 import AuthButton from "@/components/AuthButton";
 import AddLocationModal from "@/components/AddLocationModal";
 import { useRouter } from "next/navigation";
+import {
+  SUPPORTED_LOCALES,
+  handleLocaleChange,
+} from "@crowdsourced-meal-map/shared";
 
 const cmm = "/cmm.png";
-const SUPPORTED_LOCALES = [
-  { code: "en", label: "English", enabled: true },
-  { code: "de", label: "Deutsch", enabled: true },
-  { code: "fr", label: "Français", enabled: false },
-  { code: "es", label: "Español", enabled: false },
-  { code: "ar", label: "العربية", enabled: false },
-  { code: "tr", label: "Türkçe", enabled: false },
-];
 
 const Header = () => {
-  const t = useTranslations("Header");
+  const t = useTranslations("header");
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const router = useRouter();
   const locale = useLocale();
 
-  const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleLocaleChangeEvent = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newLocale = e.target.value;
     const path = window.location.pathname;
-    const segments = path.split("/");
-    if (SUPPORTED_LOCALES.some((l) => l.code === segments[1])) {
-      segments[1] = newLocale;
-    } else {
-      segments.splice(1, 0, newLocale);
-    }
-    const newPath = segments.join("/") || "/";
-    router.push(newPath + window.location.search);
+    const newPath = handleLocaleChange(newLocale, path, SUPPORTED_LOCALES);
+    router.push(newPath);
   };
 
   return (
@@ -69,7 +59,7 @@ const Header = () => {
             <AuthButton />
             <select
               value={locale}
-              onChange={handleLocaleChange}
+              onChange={handleLocaleChangeEvent}
               className="h-9 px-2 border border-dashed border-stone-950 rounded-lg bg-white text-stone-700 focus:outline-none focus:ring-2 focus:ring-stone-400"
               aria-label="Select language"
             >

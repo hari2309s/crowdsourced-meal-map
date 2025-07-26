@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { parseAddressFromNominatim } from "@crowdsourced-meal-map/shared";
 
 export interface UserLocation {
   lat: number;
@@ -10,87 +11,6 @@ export interface UserAddress {
   city: string;
   country: string;
 }
-
-const parseAddressFromNominatim = (data: any): UserAddress => {
-  if (data.address) {
-    const addr = data.address;
-
-    let address = "Current Location";
-    if (addr.road) {
-      address = addr.house_number
-        ? `${addr.road} ${addr.house_number.toUpperCase()}`
-        : addr.road;
-    } else if (addr.suburb) {
-      address = addr.suburb;
-    }
-
-    const cityParts: string[] = [];
-
-    if (addr.district) {
-      cityParts.push(addr.district);
-    } else if (addr.suburb && addr.suburb !== address) {
-      cityParts.push(addr.suburb);
-    }
-
-    if (addr.postcode && (addr.city || addr.town || addr.village)) {
-      const cityName = addr.city || addr.town || addr.village;
-      cityParts.push(`${addr.postcode} ${cityName}`);
-    } else if (addr.postcode) {
-      cityParts.push(addr.postcode);
-    } else if (addr.city || addr.town || addr.village) {
-      cityParts.push(addr.city || addr.town || addr.village);
-    }
-
-    return {
-      address,
-      city: cityParts.join(", "),
-      country: addr.country ?? "Unknown",
-    };
-  }
-
-  if (data.display_name) {
-    const addressParts = data.display_name.split(", ");
-    const middleParts = addressParts.slice(1, -1);
-
-    let postcode = "";
-    let cityName = "";
-    let district = "";
-
-    for (const part of middleParts) {
-      if (part.match(/^\d{5}$/)) {
-        postcode = part;
-      } else if (["Berlin", "Hamburg", "München", "Köln"].includes(part)) {
-        cityName = part;
-      } else if (part.length > 2 && !postcode && !cityName) {
-        district = part;
-      }
-    }
-
-    const cityParts: string[] = [];
-
-    if (district) cityParts.push(district);
-
-    if (postcode && cityName) {
-      cityParts.push(`${postcode} ${cityName}`);
-    } else if (postcode) {
-      cityParts.push(postcode);
-    } else if (cityName) {
-      cityParts.push(cityName);
-    }
-
-    return {
-      address: addressParts[0] ?? "Current Location",
-      city: cityParts.join(", "),
-      country: addressParts[addressParts.length - 1] ?? "Unknown",
-    };
-  }
-
-  return {
-    address: "Current Location",
-    city: "Unknown",
-    country: "Unknown",
-  };
-};
 
 export function useLocation() {
   const [location, setLocation] = useState<UserLocation | null>(null);
