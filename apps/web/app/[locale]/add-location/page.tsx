@@ -5,7 +5,6 @@ import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { createFoodCenter } from "@crowdsourced-meal-map/database";
 import { useSupabase } from "@/providers";

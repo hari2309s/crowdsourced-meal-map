@@ -1,4 +1,4 @@
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       food_centers: {
@@ -202,4 +202,4 @@ export interface Database {
       };
     };
   };
-}
+};

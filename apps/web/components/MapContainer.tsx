@@ -2,13 +2,13 @@
 
 import React from "react";
 
-interface MapContainerProps {
+type MapContainerProps = {
   children: React.ReactNode;
   mapLoaded: boolean;
   mapError: string | null;
   minHeight: number;
   onRetry?: () => void;
-}
+};
 
 const MapContainer: React.FC<MapContainerProps> = ({
   children,

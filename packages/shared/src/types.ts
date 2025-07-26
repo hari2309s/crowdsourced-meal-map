@@ -22,7 +22,7 @@ export type AvailabilityStatus =
 
 export type UserRole = "user" | "moderator" | "admin";
 
-export interface Profile {
+export type Profile = {
   id: string;
   email: string;
   full_name?: string;
@@ -31,9 +31,9 @@ export interface Profile {
   preferred_language: string;
   created_at: string;
   updated_at: string;
-}
+};
 
-export interface FoodCenter {
+export type FoodCenter = {
   id: string;
   name: string;
   description?: string;
@@ -59,18 +59,18 @@ export interface FoodCenter {
   created_by?: string;
   created_at: string;
   updated_at: string;
-}
+};
 
-export interface AvailabilityUpdate {
+export type AvailabilityUpdate = {
   id: string;
   food_center_id: string;
   status: AvailabilityStatus;
   notes: string | null;
   reported_by?: string;
   created_at: string;
-}
+};
 
-export interface UserReport {
+export type UserReport = {
   id: string;
   food_center_id?: string;
   reporter_id?: string;
@@ -80,9 +80,9 @@ export interface UserReport {
   moderated_by?: string;
   moderated_at?: string;
   created_at: string;
-}
+};
 
-export interface Review {
+export type Review = {
   id: string;
   food_center_id: string;
   user_id: string;
@@ -91,4 +91,4 @@ export interface Review {
   helpful_count: number;
   created_at: string;
   updated_at: string;
-}
+};

@@ -135,8 +135,8 @@ const Map = ({
         <div className="text-center">
           <p className="text-red-600 mb-2">Map Error: {mapError}</p>
           <button
-            onClick={() => {}}
             className="px-4 py-2 bg-stone-500 text-stone-950 rounded hover:bg-stone-600 transition-colors"
+            onClick={() => {}}
           >
             Retry
           </button>

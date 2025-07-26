@@ -33,11 +33,11 @@ const Header = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Image
-              src={cmm}
               alt="CrowdSourced Meal Map"
               className="h-9 w-9"
               width={36}
               height={36}
+              src={cmm}
             />
             <div>
               <h1 className="text-xl font-semibold text-gray-900">

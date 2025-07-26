@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import {
   cn,
   formatOperatingHours,
@@ -28,7 +27,7 @@ import {
 } from "@crowdsourced-meal-map/shared";
 import { motion, AnimatePresence } from "framer-motion";
 
-interface SidebarProps {
+type SidebarProps = {
   foodCenters: FoodCenter[];
   selectedCenter: FoodCenter | null;
   onSelectCenter: (center: FoodCenter | null) => void;
@@ -43,7 +42,7 @@ interface SidebarProps {
     city: string;
   }) => void;
   loading: boolean;
-}
+};
 
 const Sidebar = ({
   foodCenters,
