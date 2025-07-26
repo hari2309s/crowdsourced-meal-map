@@ -7,7 +7,7 @@ import { reviewRoutes } from "./routes/reviews";
 import { reportRoutes } from "./routes/reports";
 
 const app = express();
-const port = process.env["PORT"] || 3001;
+const port = process.env["PORT"] ?? 3001;
 
 app.use(cors());
 app.use(express.json());

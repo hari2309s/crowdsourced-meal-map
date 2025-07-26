@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Map from "@/components/Map";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
@@ -16,7 +16,7 @@ export default function HomePage() {
     dietary_restrictions: [] as string[],
     city: "Berlin",
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function loadFoodCenters() {
