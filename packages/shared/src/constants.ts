@@ -6,6 +6,15 @@ export const FOOD_CENTER_TYPES = [
   { value: "pantry", label: "Pantry" },
 ] as const;
 
+// Food center type values as constants
+export const FOOD_CENTER_TYPE_VALUES = {
+  FOOD_BANK: "food_bank",
+  COMMUNITY_KITCHEN: "community_kitchen",
+  SOUP_KITCHEN: "soup_kitchen",
+  MOBILE_UNIT: "mobile_unit",
+  PANTRY: "pantry",
+} as const;
+
 export const FOOD_CENTER_TYPE_COLORS: Record<string, string> = {
   food_bank: "#2563eb", // blue
   community_kitchen: "#16a34a", // green
@@ -40,6 +49,14 @@ export const AVAILABILITY_STATUSES = [
   { value: "unavailable", label: "Unavailable", color: "red" },
   { value: "unknown", label: "Unknown", color: "gray" },
 ] as const;
+
+// Availability status values as constants
+export const AVAILABILITY_STATUS_VALUES = {
+  AVAILABLE: "available",
+  LIMITED: "limited",
+  UNAVAILABLE: "unavailable",
+  UNKNOWN: "unknown",
+} as const;
 
 export const AVAILABILITY_STATUS_COLORS: Record<string, string> = {
   available: "text-green-700 bg-green-100",
@@ -108,7 +125,8 @@ export const DEFAULT_LOCATION_FORM = {
   address: "",
   city: "Berlin",
   country: "Germany",
-  type: "food_bank" as const,
+  district: "",
+  type: FOOD_CENTER_TYPE_VALUES.FOOD_BANK,
   dietary_restrictions: [] as string[],
   operating_hours: {} as Record<string, { open: string; close: string }>,
 };

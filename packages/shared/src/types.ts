@@ -42,6 +42,7 @@ export type FoodCenter = {
   city: string;
   country: string;
   postal_code?: string;
+  district?: string;
   phone?: string;
   email?: string;
   website?: string;

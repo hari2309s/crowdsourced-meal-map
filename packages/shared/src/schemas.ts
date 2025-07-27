@@ -1,4 +1,8 @@
 import * as z from "zod";
+import {
+  FOOD_CENTER_TYPE_VALUES,
+  AVAILABILITY_STATUS_VALUES,
+} from "./constants";
 
 // Location/Food Center Schema
 export const locationSchema = z.object({
@@ -7,15 +11,16 @@ export const locationSchema = z.object({
   city: z.string().default("Berlin"),
   country: z.string().default("Germany"),
   postal_code: z.string().optional(),
+  district: z.string().optional(),
   phone: z.string().optional(),
   email: z.string().email().optional(),
   website: z.string().url().optional(),
   type: z.enum([
-    "food_bank",
-    "community_kitchen",
-    "soup_kitchen",
-    "mobile_unit",
-    "pantry",
+    FOOD_CENTER_TYPE_VALUES.FOOD_BANK,
+    FOOD_CENTER_TYPE_VALUES.COMMUNITY_KITCHEN,
+    FOOD_CENTER_TYPE_VALUES.SOUP_KITCHEN,
+    FOOD_CENTER_TYPE_VALUES.MOBILE_UNIT,
+    FOOD_CENTER_TYPE_VALUES.PANTRY,
   ]),
   dietary_restrictions: z.array(z.string()).default([]),
   operating_hours: z
@@ -43,7 +48,12 @@ export const reviewSchema = z.object({
 
 // Availability Schema
 export const availabilitySchema = z.object({
-  status: z.enum(["available", "limited", "unavailable", "unknown"]),
+  status: z.enum([
+    AVAILABILITY_STATUS_VALUES.AVAILABLE,
+    AVAILABILITY_STATUS_VALUES.LIMITED,
+    AVAILABILITY_STATUS_VALUES.UNAVAILABLE,
+    AVAILABILITY_STATUS_VALUES.UNKNOWN,
+  ]),
   notes: z.string().optional(),
 });
 
