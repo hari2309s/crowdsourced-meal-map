@@ -7,6 +7,8 @@ import Header from "@/components/Header";
 import { getFoodCenters } from "@crowdsourced-meal-map/database";
 import type { FoodCenter } from "@crowdsourced-meal-map/shared";
 import { motion } from "framer-motion";
+import { useLocation } from "@/hooks/useLocation";
+import { sortByDistance } from "@crowdsourced-meal-map/shared";
 
 export default function HomePage() {
   const [foodCenters, setFoodCenters] = useState<FoodCenter[]>([]);
@@ -14,9 +16,11 @@ export default function HomePage() {
   const [filters, setFilters] = useState({
     type: "",
     dietary_restrictions: [] as string[],
-    city: "Berlin",
+    city: "",
   });
   const [loading, setLoading] = useState<boolean>(true);
+  const { location: userLocation } = useLocation();
+  const sortedCenters = sortByDistance(foodCenters, userLocation);
 
   useEffect(() => {
     async function loadFoodCenters() {
@@ -45,12 +49,13 @@ export default function HomePage() {
       <Header />
       <div className="flex-1 flex items-center justify-center w-[90%] py-4">
         <Sidebar
-          foodCenters={foodCenters}
+          foodCenters={sortedCenters}
           selectedCenter={selectedCenter}
           onSelectCenter={setSelectedCenter}
           filters={filters}
           onFiltersChange={setFilters}
           loading={loading}
+          userLocation={userLocation}
         />
         <div className="flex-1 py-4 pl-4 pr-0">
           <Map

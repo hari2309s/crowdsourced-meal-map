@@ -9,6 +9,7 @@ import {
   Clock,
   CopyIcon,
   MapIcon,
+  Footprints,
 } from "lucide-react";
 import type { FoodCenter } from "@crowdsourced-meal-map/shared";
 import {
@@ -16,6 +17,9 @@ import {
   openLocationInMaps,
   copyCoordinatesToClipboard,
   getAvailabilityBgColor,
+  formatAddress,
+  AVAILABILITY_STATUS_VALUES,
+  getWalkingDistanceKm,
 } from "@crowdsourced-meal-map/shared";
 
 interface LocationPopupProps {
@@ -29,6 +33,13 @@ interface LocationPopupProps {
   };
   onClose: () => void;
   foodCenter?: FoodCenter | undefined;
+  userLocation?:
+    | {
+        lat: number;
+        lng: number;
+      }
+    | null
+    | undefined;
 }
 
 const LocationPopup = ({
@@ -39,6 +50,7 @@ const LocationPopup = ({
   coordinates,
   onClose,
   foodCenter,
+  userLocation,
 }: LocationPopupProps) => {
   const typeColors = foodCenter
     ? getFoodCenterTypeColorClasses(foodCenter.type)
@@ -71,12 +83,23 @@ const LocationPopup = ({
 
       <div className="p-4 space-y-3">
         <div>
-          <p className="text-sm text-stone-600 font-medium">
-            {address}
-            {foodCenter?.postal_code && `, ${foodCenter.postal_code}`}
-            {city && `, ${city}`}
-            {country && `, ${country}`}
+          <p className="text-sm text-stone-600 font-medium whitespace-pre-line">
+            {formatAddress(
+              address,
+              foodCenter?.district,
+              foodCenter?.postal_code,
+              city,
+              country,
+            )}
           </p>
+          {userLocation && foodCenter && foodCenter.location && (
+            <div className="flex items-center space-x-1 text-xs text-stone-500 mt-1">
+              <Footprints className="h-4 w-4" />
+              <span>
+                {getWalkingDistanceKm(userLocation, foodCenter.location)} km
+              </span>
+            </div>
+          )}
         </div>
 
         {foodCenter && (
@@ -93,9 +116,11 @@ const LocationPopup = ({
               </span>
               <span
                 className={`px-2 py-1 rounded-lg text-xs ${
-                  foodCenter.current_availability === "available"
+                  foodCenter.current_availability ===
+                  AVAILABILITY_STATUS_VALUES.AVAILABLE
                     ? "bg-green-100 text-green-800"
-                    : foodCenter.current_availability === "limited"
+                    : foodCenter.current_availability ===
+                        AVAILABILITY_STATUS_VALUES.LIMITED
                       ? "bg-yellow-100 text-yellow-800"
                       : "bg-red-100 text-red-800"
                 }`}

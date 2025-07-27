@@ -15,6 +15,7 @@ import {
   DEFAULT_LOCATION_FORM,
   type LocationForm,
   type DietaryRestriction,
+  AVAILABILITY_STATUS_VALUES,
 } from "@crowdsourced-meal-map/shared";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -57,9 +58,10 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
         location: { lat, lng },
         created_by: userId,
         verified: false,
-        current_availability: "unknown",
+        current_availability: AVAILABILITY_STATUS_VALUES.UNKNOWN,
         description: data.description ?? "",
         postal_code: data.postal_code ?? "",
+        district: data.district ?? "",
         phone: data.phone ?? "",
         email: data.email ?? "",
         website: data.website ?? "",

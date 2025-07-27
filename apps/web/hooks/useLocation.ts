@@ -10,6 +10,7 @@ export interface UserAddress {
   address: string;
   city: string;
   country: string;
+  district?: string;
 }
 
 export function useLocation() {
@@ -43,6 +44,7 @@ export function useLocation() {
           address: "Current Location",
           city: "Unknown",
           country: "Unknown",
+          district: "",
         });
       } finally {
         setLoading(false);

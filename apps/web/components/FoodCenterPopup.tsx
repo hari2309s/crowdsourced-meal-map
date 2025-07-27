@@ -9,6 +9,8 @@ import {
   getStatusColor,
   DIETARY_RESTRICTIONS,
   getFoodCenterTypeColorClasses,
+  formatAddress,
+  AVAILABILITY_STATUS_VALUES,
   type FoodCenter,
   type Review,
   type AvailabilityStatus,
@@ -53,7 +55,7 @@ const AddFoodCenterPopup = ({ center, onClose }: AddFoodCenterPopupProps) => {
   const availabilityForm = useForm<AvailabilityForm>({
     resolver: zodResolver(availabilitySchema),
     defaultValues: {
-      status: "unknown",
+      status: AVAILABILITY_STATUS_VALUES.UNKNOWN,
       notes: "",
     },
   });
@@ -144,8 +146,14 @@ const AddFoodCenterPopup = ({ center, onClose }: AddFoodCenterPopupProps) => {
       </div>
 
       <div className="mt-2 space-y-2 text-xs text-gray-600">
-        <p>
-          {center.address}, {center.city}
+        <p className="whitespace-pre-line">
+          {formatAddress(
+            center.address,
+            center.district,
+            center.postal_code,
+            center.city,
+            center.country,
+          )}
         </p>
         <div className="flex items-center space-x-2">
           <span
@@ -269,10 +277,18 @@ const AddFoodCenterPopup = ({ center, onClose }: AddFoodCenterPopupProps) => {
               {t("availabilityStatus")}
             </label>
             <select {...availabilityForm.register("status")} className="input">
-              <option value="available">Available</option>
-              <option value="limited">Limited</option>
-              <option value="unavailable">Unavailable</option>
-              <option value="unknown">Unknown</option>
+              <option value={AVAILABILITY_STATUS_VALUES.AVAILABLE}>
+                Available
+              </option>
+              <option value={AVAILABILITY_STATUS_VALUES.LIMITED}>
+                Limited
+              </option>
+              <option value={AVAILABILITY_STATUS_VALUES.UNAVAILABLE}>
+                Unavailable
+              </option>
+              <option value={AVAILABILITY_STATUS_VALUES.UNKNOWN}>
+                Unknown
+              </option>
             </select>
           </div>
           <div>

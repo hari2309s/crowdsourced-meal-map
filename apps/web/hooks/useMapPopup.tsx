@@ -6,10 +6,12 @@ export function useMapPopup({
   map,
   popupInfo,
   setPopupInfo,
+  userLocation,
 }: {
   map: React.RefObject<maplibregl.Map | null>;
   popupInfo: { type: "user" | "foodCenter"; data: any } | null;
   setPopupInfo: (info: any) => void;
+  userLocation?: { lat: number; lng: number } | null;
 }) {
   const [popupPosition, setPopupPosition] = useState<{
     x: number;
@@ -40,6 +42,7 @@ export function useMapPopup({
           coordinates={popupInfo.data.location}
           onClose={() => setPopupInfo(null)}
           foodCenter={undefined}
+          userLocation={userLocation || null}
         />
       );
     } else if (popupInfo.type === "foodCenter") {
@@ -58,6 +61,7 @@ export function useMapPopup({
           coordinates={loc}
           onClose={() => setPopupInfo(null)}
           foodCenter={popupInfo.data}
+          userLocation={userLocation || null}
         />
       );
     }
@@ -84,7 +88,7 @@ export function useMapPopup({
       map.current?.off("move", updatePosition);
       map.current?.off("resize", updatePosition);
     };
-  }, [popupInfo, map, setPopupInfo]);
+  }, [popupInfo, map, setPopupInfo, userLocation]);
 
   return { popupContent, popupPosition };
 }

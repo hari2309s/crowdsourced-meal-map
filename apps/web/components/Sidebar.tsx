@@ -11,6 +11,7 @@ import {
   Globe,
   ChevronDown,
   ChevronUp,
+  Footprints,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +25,8 @@ import {
   FOOD_CENTER_TYPES,
   DIETARY_RESTRICTIONS,
   type FoodCenter,
+  formatAddress,
+  getWalkingDistanceKm,
 } from "@crowdsourced-meal-map/shared";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -43,6 +46,7 @@ type SidebarProps = {
     city: string;
   }) => void;
   loading: boolean;
+  userLocation?: { lat: number; lng: number } | null;
 };
 
 const Sidebar = ({
@@ -52,6 +56,7 @@ const Sidebar = ({
   filters,
   onFiltersChange,
   loading,
+  userLocation,
 }: SidebarProps) => {
   const t = useTranslations("sidebar");
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
@@ -205,9 +210,27 @@ const Sidebar = ({
                       </span>
                     </div>
                     <div className="mt-1 space-y-1">
-                      <p className="text-xs text-stone-500">
-                        {center.address}, {center.city}
+                      <p className="text-xs text-stone-500 whitespace-pre-line">
+                        {formatAddress(
+                          center.address,
+                          center.district,
+                          center.postal_code,
+                          center.city,
+                          center.country,
+                        )}
                       </p>
+                      {userLocation && center.location && (
+                        <div className="flex items-center space-x-1 text-xs text-stone-500">
+                          <Footprints className="h-4 w-4" />
+                          <span>
+                            {getWalkingDistanceKm(
+                              userLocation,
+                              center.location,
+                            )}{" "}
+                            km
+                          </span>
+                        </div>
+                      )}
                       <div className="flex items-center space-x-2 text-xs text-stone-500">
                         <Clock className="h-4 w-4" />
                         <span>

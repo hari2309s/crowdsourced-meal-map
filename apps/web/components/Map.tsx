@@ -73,6 +73,7 @@ const Map = ({
     map,
     popupInfo,
     setPopupInfo,
+    userLocation,
   });
 
   const flyToLocation = useCallback(

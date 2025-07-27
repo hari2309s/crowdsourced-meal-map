@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import {
-  AVAILABILITY_STATUSES,
   type FoodCenter,
+  AVAILABILITY_STATUS_VALUES,
+  FOOD_CENTER_TYPE_VALUES,
 } from "@crowdsourced-meal-map/shared";
 import { type UserAddress } from "@/hooks/useLocation";
 
@@ -74,27 +75,34 @@ export function useMapMarkers({
         markerContainer.style.height = "16px";
 
         const el = document.createElement("div");
-        const availabilityColor = AVAILABILITY_STATUSES.find(
-          (status) => status.value === center.current_availability,
-        );
+        //const availabilityColor = AVAILABILITY_STATUSES.find(
+        //(status) => status.value === center.current_availability,
+        //);
         const shouldPulse =
-          center.current_availability === "available" ||
-          center.current_availability === "limited";
+          center.current_availability ===
+            AVAILABILITY_STATUS_VALUES.AVAILABLE ||
+          center.current_availability === AVAILABILITY_STATUS_VALUES.LIMITED;
 
         el.className =
           "w-4 h-4 rounded-full border-2 border-white shadow-lg transition-transform relative z-10";
 
-        // Use availability status color as background
-        const bgColor =
-          availabilityColor?.color === "green"
-            ? "#22c55e"
-            : availabilityColor?.color === "yellow"
-              ? "#eab308"
-              : availabilityColor?.color === "red"
-                ? "#ef4444"
-                : "#6b7280";
-
-        el.style.backgroundColor = bgColor;
+        // Use food center type color as background
+        //const { bg } = getFoodCenterTypeColorClasses(center.type);
+        // Convert Tailwind class to hex color for inline style
+        // We'll use a simple mapping for now (should match the bg classes in getFoodCenterTypeColorClasses)
+        const typeColorHex =
+          center.type === FOOD_CENTER_TYPE_VALUES.FOOD_BANK
+            ? "#2563eb" // blue-600
+            : center.type === FOOD_CENTER_TYPE_VALUES.COMMUNITY_KITCHEN
+              ? "#16a34a" // green-600
+              : center.type === FOOD_CENTER_TYPE_VALUES.SOUP_KITCHEN
+                ? "#fb923c" // orange-400
+                : center.type === FOOD_CENTER_TYPE_VALUES.MOBILE_UNIT
+                  ? "#a21caf" // purple-500
+                  : center.type === FOOD_CENTER_TYPE_VALUES.PANTRY
+                    ? "#e11d48" // rose-500
+                    : "#e7e5e4"; // stone-200 (default)
+        el.style.backgroundColor = typeColorHex;
         el.style.opacity = "1";
 
         // Add pulsating wave effect for available/limited centers
@@ -106,7 +114,7 @@ export function useMapMarkers({
             wave.style.left = "0";
             wave.style.width = "16px";
             wave.style.height = "16px";
-            wave.style.borderColor = bgColor;
+            wave.style.borderColor = typeColorHex;
             wave.style.opacity = "0.4";
             wave.style.animation = `pulse-wave 2s cubic-bezier(0.4, 0, 0.6, 1) infinite ${i * 0.3}s`;
             wave.style.pointerEvents = "none";
