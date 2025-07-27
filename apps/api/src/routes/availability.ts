@@ -4,12 +4,18 @@ import {
   createAvailabilityUpdate,
   getAvailabilityUpdates,
 } from "@crowdsourced-meal-map/database";
+import { AVAILABILITY_STATUS_VALUES } from "@crowdsourced-meal-map/shared";
 
 export const availabilityRoutes: Router = Router();
 
 const availabilitySchema = z.object({
   food_center_id: z.string(),
-  status: z.enum(["available", "limited", "unavailable", "unknown"]),
+  status: z.enum([
+    AVAILABILITY_STATUS_VALUES.AVAILABLE,
+    AVAILABILITY_STATUS_VALUES.LIMITED,
+    AVAILABILITY_STATUS_VALUES.UNAVAILABLE,
+    AVAILABILITY_STATUS_VALUES.UNKNOWN,
+  ]),
   notes: z.string().optional(),
   reported_by: z.string().optional(),
 });

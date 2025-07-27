@@ -7,9 +7,11 @@ import {
   updateFoodCenter,
 } from "@crowdsourced-meal-map/database";
 import {
-  DietaryRestriction,
+  FOOD_CENTER_TYPE_VALUES,
+  AVAILABILITY_STATUS_VALUES,
+  type DietaryRestriction,
   removeUndefined,
-  FoodCenter,
+  type FoodCenter,
 } from "@crowdsourced-meal-map/shared";
 
 export const foodCenterRoutes: Router = Router();
@@ -18,16 +20,17 @@ const foodCenterSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
   type: z.enum([
-    "food_bank",
-    "community_kitchen",
-    "soup_kitchen",
-    "mobile_unit",
-    "pantry",
+    FOOD_CENTER_TYPE_VALUES.FOOD_BANK,
+    FOOD_CENTER_TYPE_VALUES.COMMUNITY_KITCHEN,
+    FOOD_CENTER_TYPE_VALUES.SOUP_KITCHEN,
+    FOOD_CENTER_TYPE_VALUES.MOBILE_UNIT,
+    FOOD_CENTER_TYPE_VALUES.PANTRY,
   ]),
   address: z.string().min(1),
   city: z.string().min(1),
   country: z.string().min(1),
   postal_code: z.string().optional(),
+  district: z.string().optional(),
   phone: z.string().optional(),
   email: z.string().email().optional(),
   website: z.string().url().optional(),
@@ -43,8 +46,13 @@ const foodCenterSchema = z.object({
   languages_spoken: z.array(z.string()).optional(),
   capacity: z.number().optional(),
   current_availability: z
-    .enum(["available", "limited", "unavailable", "unknown"])
-    .default("unknown"),
+    .enum([
+      AVAILABILITY_STATUS_VALUES.AVAILABLE,
+      AVAILABILITY_STATUS_VALUES.LIMITED,
+      AVAILABILITY_STATUS_VALUES.UNAVAILABLE,
+      AVAILABILITY_STATUS_VALUES.UNKNOWN,
+    ])
+    .default(AVAILABILITY_STATUS_VALUES.UNKNOWN),
   verified: z.boolean().default(false),
   created_by: z.string().optional(),
 });
@@ -97,18 +105,22 @@ foodCenterRoutes.post("/", async (req: Request, res: Response) => {
     const data = foodCenterSchema.parse(req.body);
     const foodCenter = await createFoodCenter({
       ...data,
+      location: { lat: data.location.lat, lng: data.location.lng },
+      created_by: data.created_by ?? "",
+      verified: false,
+      current_availability: AVAILABILITY_STATUS_VALUES.UNKNOWN,
       description: data.description ?? "",
       postal_code: data.postal_code ?? "",
+      district: data.district ?? "",
       phone: data.phone ?? "",
       email: data.email ?? "",
       website: data.website ?? "",
-      contact_person: data.contact_person ?? "",
-      operating_hours: data.operating_hours ?? {},
-      dietary_restrictions: (data.dietary_restrictions ??
-        []) as DietaryRestriction[],
+      contact_person: "",
       languages_spoken: data.languages_spoken ?? [],
       capacity: data.capacity ?? 0,
-      created_by: data.created_by ?? "",
+      dietary_restrictions: (data.dietary_restrictions ??
+        []) as DietaryRestriction[],
+      operating_hours: data.operating_hours ?? {},
     });
     res.status(201).json(foodCenter);
   } catch (error) {
