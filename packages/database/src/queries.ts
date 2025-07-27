@@ -5,6 +5,7 @@ import type {
   UserReport,
   Review,
 } from "@crowdsourced-meal-map/shared";
+import { transformFoodCenter } from "./utils";
 
 export async function getFoodCenters(filters?: {
   type?: string;
@@ -14,7 +15,7 @@ export async function getFoodCenters(filters?: {
 }) {
   let query = supabase
     .from("food_centers_with_latlng")
-    .select("*")
+    .select("*, district")
     .order("created_at", { ascending: false });
 
   if (filters?.type) {
@@ -42,7 +43,9 @@ export async function getFoodCenters(filters?: {
   const { data, error } = await query;
 
   if (error) throw error;
-  return data as FoodCenter[];
+
+  // Transform the data to ensure location is properly structured
+  return data?.map(transformFoodCenter) ?? [];
 }
 
 export async function getNearbyFoodCenters(
@@ -73,7 +76,7 @@ export async function getFoodCenterById(id: string) {
     .single();
 
   if (error) throw error;
-  return data as FoodCenter;
+  return transformFoodCenter(data) as FoodCenter;
 }
 
 export async function createFoodCenter(

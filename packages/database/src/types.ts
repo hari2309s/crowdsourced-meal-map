@@ -11,6 +11,7 @@ export type Database = {
           city: string;
           country: string;
           postal_code: string | null;
+          district: string | null;
           phone: string | null;
           email: string | null;
           website: string | null;
@@ -38,6 +39,7 @@ export type Database = {
           city: string;
           country: string;
           postal_code?: string | null;
+          district?: string | null;
           phone?: string | null;
           email?: string | null;
           website?: string | null;
@@ -65,6 +67,7 @@ export type Database = {
           city?: string;
           country?: string;
           postal_code?: string | null;
+          district?: string | null;
           phone?: string | null;
           email?: string | null;
           website?: string | null;
