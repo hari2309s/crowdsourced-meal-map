@@ -11,7 +11,6 @@ import {
   MapIcon,
   Footprints,
 } from "lucide-react";
-import type { FoodCenter } from "@crowdsourced-meal-map/shared";
 import {
   getFoodCenterTypeColorClasses,
   openLocationInMaps,
@@ -20,9 +19,10 @@ import {
   formatAddress,
   AVAILABILITY_STATUS_VALUES,
   getWalkingDistanceKm,
+  type FoodCenter,
 } from "@crowdsourced-meal-map/shared";
 
-interface LocationPopupProps {
+type LocationPopupProps = {
   title: string;
   address: string;
   city: string;
@@ -40,7 +40,7 @@ interface LocationPopupProps {
       }
     | null
     | undefined;
-}
+};
 
 const LocationPopup = ({
   title,

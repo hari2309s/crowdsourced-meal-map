@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import {
   type FoodCenter,
@@ -7,10 +7,10 @@ import {
 } from "@crowdsourced-meal-map/shared";
 import { type UserAddress } from "@/hooks/useLocation";
 
-interface LatLng {
+type LatLng = {
   lat: number;
   lng: number;
-}
+};
 
 export function useMapMarkers({
   map,
@@ -28,8 +28,10 @@ export function useMapMarkers({
   userLocation: LatLng | null | undefined;
   userAddress: UserAddress | null;
   selectedCenter: FoodCenter | null;
+  // eslint-disable-next-line no-unused-vars
   onSelectCenter: (center: FoodCenter | null) => void;
   setPopupInfo: (
+    // eslint-disable-next-line no-unused-vars
     info: {
       type: "user" | "foodCenter";
       data:

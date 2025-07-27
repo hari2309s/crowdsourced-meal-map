@@ -1,15 +1,15 @@
 import { useRef, useState, useEffect } from "react";
 import maplibregl from "maplibre-gl";
 
-interface LatLng {
+type LatLng = {
   lat: number;
   lng: number;
-}
+};
 
-interface Bounds {
+type Bounds = {
   southwest: LatLng;
   northeast: LatLng;
-}
+};
 
 export function useMapLibre(
   initialCenter: LatLng,

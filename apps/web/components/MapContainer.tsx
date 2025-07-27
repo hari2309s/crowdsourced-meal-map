@@ -45,7 +45,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
         <div className="absolute inset-0 flex items-center justify-center bg-stone-100 z-40">
           <div className="text-center">
             <p className="text-gray-600 mb-2">Loading MapLibre GL...</p>
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-stone-500 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-stone-500 mx-auto" />
           </div>
         </div>
       )}

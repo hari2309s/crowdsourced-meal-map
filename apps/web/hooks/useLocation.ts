@@ -1,17 +1,17 @@
 import { useState, useEffect, useCallback } from "react";
 import { parseAddressFromNominatim } from "@crowdsourced-meal-map/shared";
 
-export interface UserLocation {
+export type UserLocation = {
   lat: number;
   lng: number;
-}
+};
 
-export interface UserAddress {
+export type UserAddress = {
   address: string;
   city: string;
   country: string;
   district?: string;
-}
+};
 
 export function useLocation() {
   const [location, setLocation] = useState<UserLocation | null>(null);

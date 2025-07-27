@@ -14,7 +14,7 @@ import {
   locationSchema,
   DEFAULT_LOCATION_FORM,
   type LocationForm,
-  DietaryRestriction,
+  type DietaryRestriction,
   AVAILABILITY_STATUS_VALUES,
 } from "@crowdsourced-meal-map/shared";
 

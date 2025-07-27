@@ -11,10 +11,10 @@ import {
   cn,
 } from "@crowdsourced-meal-map/shared";
 
-interface ColorCardProps {
+type ColorCardProps = {
   className?: string;
   compact?: boolean;
-}
+};
 
 const ColorCard: React.FC<ColorCardProps> = ({
   className,

@@ -5,10 +5,9 @@ import Map from "@/components/Map";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import { getFoodCenters } from "@crowdsourced-meal-map/database";
-import type { FoodCenter } from "@crowdsourced-meal-map/shared";
+import { type FoodCenter, sortByDistance } from "@crowdsourced-meal-map/shared";
 import { motion } from "framer-motion";
 import { useLocation } from "@/hooks/useLocation";
-import { sortByDistance } from "@crowdsourced-meal-map/shared";
 
 export default function HomePage() {
   const [foodCenters, setFoodCenters] = useState<FoodCenter[]>([]);

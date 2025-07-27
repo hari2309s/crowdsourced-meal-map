@@ -11,6 +11,10 @@ import {
   getFoodCenterTypeColorClasses,
   formatAddress,
   AVAILABILITY_STATUS_VALUES,
+  reviewSchema,
+  availabilitySchema,
+  type ReviewForm,
+  type AvailabilityForm,
   type FoodCenter,
   type Review,
   type AvailabilityStatus,
@@ -21,19 +25,13 @@ import {
   createAvailabilityUpdate,
   type CreateAvailabilityUpdateInput,
 } from "@crowdsourced-meal-map/database";
-import {
-  reviewSchema,
-  availabilitySchema,
-  type ReviewForm,
-  type AvailabilityForm,
-} from "@crowdsourced-meal-map/shared";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-interface AddFoodCenterPopupProps {
+type AddFoodCenterPopupProps = {
   center: FoodCenter;
   onClose: () => void;
-}
+};
 
 const AddFoodCenterPopup = ({ center, onClose }: AddFoodCenterPopupProps) => {
   const t = useTranslations("addFoodCenterPopup");

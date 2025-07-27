@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import React, { useEffect, useState, type ReactNode } from "react";
 import type maplibregl from "maplibre-gl";
 import LocationPopup from "@/components/LocationPopup";
 
@@ -42,7 +42,7 @@ export function useMapPopup({
           coordinates={popupInfo.data.location}
           onClose={() => setPopupInfo(null)}
           foodCenter={undefined}
-          userLocation={userLocation || null}
+          userLocation={userLocation ?? null}
         />
       );
     } else if (popupInfo.type === "foodCenter") {
@@ -61,7 +61,7 @@ export function useMapPopup({
           coordinates={loc}
           onClose={() => setPopupInfo(null)}
           foodCenter={popupInfo.data}
-          userLocation={userLocation || null}
+          userLocation={userLocation ?? null}
         />
       );
     }

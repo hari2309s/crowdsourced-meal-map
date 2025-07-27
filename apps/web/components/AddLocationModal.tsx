@@ -19,10 +19,10 @@ import {
 } from "@crowdsourced-meal-map/shared";
 import { motion, AnimatePresence } from "framer-motion";
 
-interface AddLocationModalProps {
+type AddLocationModalProps = {
   isOpen: boolean;
   onClose: () => void;
-}
+};
 
 const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
   const t = useTranslations("addLocationModal");

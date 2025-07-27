@@ -34,12 +34,13 @@ type SidebarProps = {
   foodCenters: FoodCenter[];
   selectedCenter: FoodCenter | null;
   // eslint-disable-next-line no-unused-vars
-  onSelectCenter: (_: FoodCenter | null) => void;
+  onSelectCenter: (center: FoodCenter | null) => void;
   filters: {
     type: string;
     dietary_restrictions: string[];
     city: string;
   };
+  // eslint-disable-next-line no-unused-vars
   onFiltersChange: (filters: {
     type: string;
     dietary_restrictions: string[];
@@ -72,14 +73,14 @@ const Sidebar = ({
   const searchValue = watch("search");
 
   const filteredCenters = foodCenters.filter((center) =>
-    center.name.toLowerCase().includes(searchValue?.toLowerCase() || ""),
+    center.name.toLowerCase().includes(searchValue?.toLowerCase() ?? ""),
   );
 
   const onSubmit = (data: FilterForm) => {
     onFiltersChange({
       ...filters,
-      type: data.type || "",
-      dietary_restrictions: data.dietary_restrictions || [],
+      type: data.type ?? "",
+      dietary_restrictions: data.dietary_restrictions ?? [],
     });
   };
 
