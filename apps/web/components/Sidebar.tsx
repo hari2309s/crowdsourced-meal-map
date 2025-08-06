@@ -95,6 +95,7 @@ const Sidebar = ({
               type="text"
               placeholder={t("searchPlaceholder")}
               className="pl-10 w-full h-full"
+              disabled
             />
           </div>
 
@@ -102,6 +103,7 @@ const Sidebar = ({
             type="button"
             onClick={() => setIsFilterOpen(!isFilterOpen)}
             className="btn btn-secondary btn-sm w-full flex items-center justify-between disabled:cursor-not-allowed"
+            disabled
           >
             <span className="flex items-center">
               <Filter className="h-4 w-4 mr-2" />
