@@ -12,11 +12,13 @@
 Crowdsourced Meal Map is a community-driven platform that helps people find free meal resources in their area. By connecting food banks, soup kitchens, community fridges, and other food distribution centers, we're working to eliminate food insecurity one location at a time.
 
 ### 🎯 Mission
+
 Supporting **UN Sustainable Development Goal 2 (Zero Hunger)** by democratizing access to food security information through technology and community collaboration.
 
 ## ✨ Features
 
 ### Current Features
+
 - 🗺️ **Interactive Map**: Browse food centers with detailed location information
 - 📱 **Responsive Design**: Seamless experience across desktop, tablet, and mobile
 - 🌐 **Internationalization**: Multi-language support for global accessibility
@@ -24,6 +26,7 @@ Supporting **UN Sustainable Development Goal 2 (Zero Hunger)** by democratizing 
 - 🔍 **Search & Filter**: Find specific types of food assistance near you
 
 ### 🚧 Coming Soon
+
 - 👥 **Community Contributions**: Allow users to add new food centers
 - 🤖 **AI-Powered Verification**: Automated credibility checking for new submissions
 - 🔍 **Semantic Search**: Natural language queries powered by Pinecone vector search
@@ -31,7 +34,8 @@ Supporting **UN Sustainable Development Goal 2 (Zero Hunger)** by democratizing 
 - 🌍 **GIS Integration**: Enhanced geographical intelligence and mapping
 
 ## 🏗️ Architecture
-  - [View System Architecture Diagram](docs/system-architecture.md)
+
+- [View System Architecture Diagram](docs/system-architecture.md)
 
 This project uses a modern monorepo structure with Turbo for optimal development workflow:
 
@@ -53,23 +57,27 @@ crowdsourced-meal-map/
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **Next.js** (React 19) - Full-stack React framework
 - **TypeScript** - Type-safe JavaScript
 - **Tailwind CSS** - Utility-first CSS framework
 - **React Components** - Modern component architecture
 
 ### Backend
+
 - **Express.js** - Fast, unopinionated web framework
 - **Supabase** - Open-source Firebase alternative
 - **PostgreSQL** - Reliable relational database
 
 ### Development Tools
+
 - **Turbo** - High-performance build system for monorepos
 - **ESLint** - Code linting and quality assurance
 - **Prettier** - Code formatting
 - **pnpm** - Fast, disk space efficient package manager
 
 ### Future AI Integration
+
 - **Pinecone** - Vector database for semantic search
 - **AI Models** - For content moderation and verification
 - **GIS Libraries** - Enhanced geospatial capabilities
@@ -89,6 +97,7 @@ We welcome community contributions! The most valuable way you can help is by **a
 We're actively looking for community members to help us map food resources globally. Your contributions directly support people in need by making food assistance more discoverable.
 
 **What we need:**
+
 - Food banks and pantries
 - Soup kitchens and community meals
 - Community fridges and little free pantries

@@ -380,16 +380,69 @@ export function getWalkingDistanceKm(
  * @param userLocation { lat, lng }
  * @returns Sorted array of FoodCenter
  */
+/**
+ * Checks if a food center is currently open based on its operating hours
+ * @param hours Operating hours object
+ * @returns boolean indicating if the center is currently open
+ */
+export function isCurrentlyOpen(
+  hours: Record<string, { open: string; close: string }> | undefined,
+): boolean {
+  if (!hours) return false;
+
+  const now = new Date();
+  const today = now
+    .toLocaleDateString("en-US", { weekday: "short" })
+    .toLowerCase();
+  const todayHours = hours[today];
+
+  if (!todayHours) return false;
+
+  const currentTime = now.getHours() * 100 + now.getMinutes();
+  const openTime = parseInt(todayHours.open.replace(":", ""));
+  const closeTime = parseInt(todayHours.close.replace(":", ""));
+
+  return currentTime >= openTime && currentTime <= closeTime;
+}
+
+/**
+ * Calculate a score for sorting food centers based on distance and opening hours
+ * @param center Food center to score
+ * @param userLocation User's location
+ * @returns Score (lower is better)
+ */
+export function getFoodCenterScore(
+  center: {
+    location: { lat: number; lng: number };
+    operating_hours?: Record<string, { open: string; close: string }>;
+  },
+  userLocation: { lat: number; lng: number } | null | undefined,
+): number {
+  if (!userLocation) return 0;
+
+  const distance = getWalkingDistanceKm(userLocation, center.location);
+  const isOpen = isCurrentlyOpen(center.operating_hours);
+
+  return isOpen ? distance : distance + 1000;
+}
+
+/**
+ * Sorts an array of food centers by a combination of opening status and distance
+ * Open centers are prioritized, then sorted by distance
+ */
 export function sortByDistance<
-  T extends { location: { lat: number; lng: number } },
+  T extends {
+    location: { lat: number; lng: number };
+    operating_hours?: Record<string, { open: string; close: string }>;
+  },
 >(
   centers: T[],
   userLocation: { lat: number; lng: number } | null | undefined,
 ): T[] {
   if (!userLocation) return centers;
   return [...centers].sort((a, b) => {
-    const distA = getWalkingDistanceKm(userLocation, a.location);
-    const distB = getWalkingDistanceKm(userLocation, b.location);
-    return distA - distB;
+    const scoreA = getFoodCenterScore(a, userLocation);
+    const scoreB = getFoodCenterScore(b, userLocation);
+    return scoreA - scoreB;
   });
 }

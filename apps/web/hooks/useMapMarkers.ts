@@ -174,6 +174,7 @@ export function useMapMarkers({
     onSelectCenter,
     setPopupInfo,
     map,
+    userLocation,
   ]);
 
   useEffect(() => {
@@ -243,5 +244,13 @@ export function useMapMarkers({
         userMarkerRef.current = null;
       }
     };
-  }, [userLocation, mapLoaded, userAddress, onSelectCenter, setPopupInfo, map]);
+  }, [
+    userLocation,
+    mapLoaded,
+    userAddress,
+    onSelectCenter,
+    setPopupInfo,
+    map,
+    foodCenters,
+  ]);
 }
