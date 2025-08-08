@@ -31,6 +31,7 @@ Supporting **UN Sustainable Development Goal 2 (Zero Hunger)** by democratizing 
 - 🌍 **GIS Integration**: Enhanced geographical intelligence and mapping
 
 ## 🏗️ Architecture
+  - [View System Architecture Diagram](docs/system-architecture.md)
 
 This project uses a modern monorepo structure with Turbo for optimal development workflow:
 
