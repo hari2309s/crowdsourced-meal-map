@@ -116,7 +116,7 @@ graph TB
 
 ### Key Features
 
-- **Crowdsourced Meal Discovery**: Community-driven restaurant and meal data
+- **Crowdsourced Meal Discovery**: Community-driven food centers and soup kitchens
 - **Location-based Search**: Geographic filtering and mapping
 - **User Reviews & Ratings**: Community feedback system
 - **Social Authentication**: Multiple login providers
