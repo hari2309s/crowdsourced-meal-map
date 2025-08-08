@@ -203,7 +203,7 @@ export function openLocationInMaps(lat: number, lng: number): void {
     if (/iphone|ipad|ipod/.test(userAgent)) {
       // iOS - try Apple Maps first, then Google Maps
       url = `maps://maps.apple.com/?q=${lat},${lng}`;
-    } else if (/android/.test(userAgent)) {
+    } else if (userAgent.includes("android")) {
       // Android - try Google Maps first, then other map apps
       url = `geo:${lat},${lng}?q=${lat},${lng}`;
     } else {
@@ -217,10 +217,10 @@ export function openLocationInMaps(lat: number, lng: number): void {
     if (/macintosh|mac os x/.test(userAgent)) {
       // macOS - try Apple Maps, then Google Maps
       url = `maps://maps.apple.com/?q=${lat},${lng}`;
-    } else if (/windows/.test(userAgent)) {
+    } else if (userAgent.includes("windows")) {
       // Windows - try Microsoft Maps, then Google Maps
       url = `bingmaps://?cp=${lat}~${lng}&lvl=15`;
-    } else if (/linux/.test(userAgent)) {
+    } else if (userAgent.includes("linux")) {
       // Linux - use Google Maps as default (most Linux users prefer web-based maps)
       url = `https://maps.google.com/maps?q=${lat},${lng}`;
     } else {
