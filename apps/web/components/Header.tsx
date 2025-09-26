@@ -52,6 +52,7 @@ const Header = () => {
               onClick={() => router.push(`/${locale}/add-location`)}
               className="h-9 flex justify-center items-center cursor-pointer bg-stone-50 border-[1px] border-dashed border-stone-700 rounded-lg p-2 hover:bg-stone-100 disabled:cursor-not-allowed"
               disabled
+              hidden
             >
               <Plus className="h-4 w-4 mr-1" />
               {t("addLocation")}

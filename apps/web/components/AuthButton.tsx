@@ -52,7 +52,7 @@ const AuthButton = () => {
   };
 
   return (
-    <div>
+    <div hidden>
       {user ? (
         <button
           onClick={handleSignOut}
