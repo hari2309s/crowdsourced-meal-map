@@ -46,7 +46,7 @@ export default function HomePage() {
       animate={{ opacity: 1 }}
     >
       <Header />
-      <div className="flex-1 flex items-center justify-center w-[90%] py-4">
+      <div className="flex-1 flex flex-col items-center justify-center w-[90%] py-4 md:flex-row">
         <Sidebar
           foodCenters={sortedCenters}
           selectedCenter={selectedCenter}
@@ -56,7 +56,7 @@ export default function HomePage() {
           loading={loading}
           userLocation={userLocation}
         />
-        <div className="flex-1 py-4 pl-4 pr-0">
+        <div className="flex flex-1 justify-center items-center py-4 px-0 md:pl-4 w-full ">
           <Map
             foodCenters={foodCenters}
             selectedCenter={selectedCenter}

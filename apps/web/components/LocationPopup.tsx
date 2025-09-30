@@ -66,7 +66,7 @@ const LocationPopup = ({
 
   return (
     <div
-      className={`${getAvailabilityBgColor(foodCenter?.current_availability)} rounded-lg shadow-lg border border-stone-200 max-w-sm w-full z-50`}
+      className={`${getAvailabilityBgColor(foodCenter?.current_availability)} rounded-lg shadow-lg border border-stone-200 min-w-xs max-w-sm w-full z-50`}
     >
       <div className="flex items-center justify-between p-3 border-b border-stone-200">
         <div className="flex items-center space-x-2">
