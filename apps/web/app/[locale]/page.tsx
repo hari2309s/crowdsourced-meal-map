@@ -46,7 +46,7 @@ export default function HomePage() {
       animate={{ opacity: 1 }}
     >
       <Header />
-      <div className="flex-1 flex flex-col items-center justify-center w-[90%] py-4 md:flex-row">
+      <div className="flex flex-col items-center justify-center w-[90%] py-4 md:flex-row">
         <Sidebar
           foodCenters={sortedCenters}
           selectedCenter={selectedCenter}
