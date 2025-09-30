@@ -17,7 +17,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} relative overflow-x-hidden`}>
         <Providers>
-          <div className="relative z-10">{children}</div>
+          <div className="relative z-10 bg-stone-50 h-screen">{children}</div>
         </Providers>
       </body>
     </html>

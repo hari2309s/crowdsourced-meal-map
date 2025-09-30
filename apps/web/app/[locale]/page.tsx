@@ -41,7 +41,7 @@ export default function HomePage() {
 
   return (
     <motion.div
-      className="h-screen w-screen flex flex-col items-center justify-center bg-stone-50"
+      className="w-screen flex flex-col items-center justify-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
