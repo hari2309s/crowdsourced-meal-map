@@ -106,7 +106,7 @@ export const MAP_CONFIG = {
   ZOOM: 13,
   FLY_DURATION: 1000,
   MIN_HEIGHT: 600,
-  MIN_WIDTH: 400,
+  MIN_WIDTH: 385,
 } as const;
 
 // Supported locales for internationalization
@@ -175,7 +175,7 @@ export function parseAddressFromNominatim(data: any) {
       }
     }
 
-    if (addr.country) country = addr.country;
+    if (addr.country) ({ country } = addr);
 
     return {
       address,

@@ -77,7 +77,6 @@ crowdsourced-meal-map/
 
 Visit [Crowdsourced Meal Map](https://github.com/hari2309s/crowdsourced-meal-map) to explore food centers in your area! The platform is designed to be intuitive and user-friendly - simply browse the interactive map to find nearby food assistance resources.
 
-
 ## 🙏 Acknowledgments
 
 - **Open Source Community** for the amazing tools and libraries
